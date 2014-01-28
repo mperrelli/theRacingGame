@@ -14,9 +14,9 @@ For this project we are using the AppGameKit to develop a racing game.
 
 1. Download the AGK installer 
    (http://files.thegamecreators.com/agk/AppGameKitTrial.zip)
+   (If you still have it installed from Game Dev class then you can skip to step 3)
 
 2. Run the installer and change the install path to a distinct directory for our project 
-   (If you still have it installed from Game Dev class then you can skip this part)
 
 3. Once you have AGK installed navigate the AGK files to the templates directory
    (\IDE\templates)
