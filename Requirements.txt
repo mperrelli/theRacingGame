@@ -2,26 +2,6 @@
  
 Requirements
  
-The purpose of this project is to create a game for our client using the AGK library and C++. The general idea the client is aiming for is a type of racing game where the user has the ability to choose between two different types of racing tracks at the start of the game; one track will be linear where the user will have an aerial view of his car and will be racing in a straight line while other trying to avoid cars and damage to his vehicle. The other track will also have a top-down view, but the entire track will be visible and will include laps. Our hope for this type of track is to have the track be randomly generated every time the user selects this type of race.
-Our client wants displayed on the screen how fast (in MPH) the user’s car is going at all times and a damage bar showing how much damage the car can take before the player loses. Different factors will affect the user’s speed: collision with another car or driving off the track will greatly reduce the player’s speed until the car is corrected. One thing we have to work on the most is the car AI. The computer’s cars will need to have some sort of collision detection so that they can never bump in to each other. We also have to have the cars drive at random and differing speeds and have them weaving through the different lanes on their own.
-The client also wants a level system, such that if the player is able to survive long enough without breaking down, they will advance to the next level where the AI cars will be faster and more aggressive. These levels will increase until the user beats the game. Our client requires that we implement some sort of way to know how the cars are moving with some sort of graphic. Lastly, we need a user manual that describes our game and how to play it. This can be done with a written out document, or possibly even through an instruction screen ingame.
-
-
-
-- Pre defines track
-	-- linear track
-	-- circular track
-- AI cars
-	-- change speeds, lanes
-- Difficulty levels
-- Select cars with different speeds
-- Damage indicator
-	-- too much damage looses game
-- Time based
-	-- time based and damage based?
-- Going off course slows down car
-- Know car is moving
-	-- road moving
-	-- tire smoke?
-
-- User manual
+The purpose of this project is to create a game for our client using the AGK software library and the C++ language. The general idea the client is aiming for is a type of racing game where the user has the ability to choose between two different types of racing tracks at the start of the game. One track will be linear where the user will have an aerial view of the car and racing in a straight line while trying to avoid other cars and damage to their vehicle. The other track will also have a top-down aerial view, but the entire track will be visible. It will include laps and a timer. Our hope for this type of track is to have the track be randomly generated every time the user selects this type of race.
+Our client wants displayed how fast (in MPH) the user’s car is going at all times and a damage bar showing how much damage the car has. Too much damage the player will lose. Different factors will affect the user’s speed: collision with another car or driving off the track will greatly reduce the player’s speed until the car is corrected. One thing we have to work on the most is the car's artificial intelligence. The computer’s cars will need to have collision detection to asses damage and change the vehicles speed. We also have to have the cars drive at random and differing speeds while they weave in and out of the different lanes on their own.
+The client also wants a level system, such that if the player is able to survive long enough without breaking down, they will advance to the next level where the AI cars will become faster and more aggressive. These levels will increase until the user beats the game. Our client requires that we implement some sort of way to know how the cars are moving with some sort of graphic. Lastly, we need a user manual that describes our game and how to play it. This can be done with a written out document, or possibly even through an instruction screen in-game.
