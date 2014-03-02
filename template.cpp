@@ -8,7 +8,11 @@
 
 // Includes, namespace and prototypes
 #include "template.h"
+#include <string>
 using namespace AGK;
+using namespace std;
+#include "sprite.h"
+#include "vehicle.h"
 app App;
 
 // Gamestates
