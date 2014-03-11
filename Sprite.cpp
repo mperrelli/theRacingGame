@@ -1,7 +1,9 @@
 #include "Sprite.h"
+#include "template.h"
 #include <iostream>
 
 using namespace std;
+using namespace AGK;
 
 Sprite::Sprite(int index, string image){
 	spriteIndex = index;
@@ -9,7 +11,7 @@ Sprite::Sprite(int index, string image){
 }
 
 void Sprite::createSprite(int index, string image){
-
+	agk::CreateSprite(index, image);
 }
 
 void Sprite::setImage(int index){
@@ -17,11 +19,11 @@ void Sprite::setImage(int index){
 }
 
 void Sprite::setX(float posX){
-	SetSpriteX(spriteIndex, posX);
+	agk::SetSpriteX(spriteIndex, posX);
 }
 
 void Sprite::setY(float posY){
-	SetSpriteY(spriteIndex, posY);
+	agk::SetSpriteY(spriteIndex, posY);
 }
 
 int Sprite::getSpriteIndex(){
@@ -33,11 +35,11 @@ string Sprite::getImageFile(){
 }
 
 float Sprite::getX(){
-	return GetSpriteX(spriteIndex);
+	return agk::GetSpriteX(spriteIndex);
 }
 
 float Sprite::getY(){
-	return GetSpriteY(spriteIndex);
+	return agk::GetSpriteY(spriteIndex);
 }
 
 float Sprite::getWidth(){
@@ -49,9 +51,9 @@ float Sprite::getHeight(){
 }
 
 float Sprite::getCenterX(){
-	getWidth() / 2;
+	//getWidth() / 2;
 }
 
 float Sprite::getCenterY(){
-	getHeight() / 2;
+	//getHeight() / 2;
 }

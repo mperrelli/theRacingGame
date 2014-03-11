@@ -1,6 +1,6 @@
 #include "Environment.h"
 
-Environment::Environment(int diff, int t);
+Environment::Environment(int diff, int t)
 {
 	difficulty = diff;
 	type = t;
