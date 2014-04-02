@@ -5,33 +5,46 @@
 using namespace std;
 using namespace AGK;
 
-Sprite::Sprite(int index, string image){
-	spriteIndex = index;
-	imageFile = image;
+
+Sprite::Sprite()
+{
+	spriteIndex = NULL;
+	imageIndex = NULL;
 }
 
-void Sprite::createSprite(int index, string image){
+Sprite::Sprite(int index, int image)
+{
+	spriteIndex = index;
+	imageIndex = image;
+}
+
+void Sprite::createSprite(int index, int image)
+{
 	agk::CreateSprite(index, image);
 }
 
-void Sprite::setImage(int index){
+void Sprite::setImage(int index)
+{
 
 }
 
-void Sprite::setX(float posX){
+void Sprite::setX(float posX)
+{
 	agk::SetSpriteX(spriteIndex, posX);
 }
 
-void Sprite::setY(float posY){
+void Sprite::setY(float posY)
+{
 	agk::SetSpriteY(spriteIndex, posY);
 }
 
-int Sprite::getSpriteIndex(){
+int Sprite::getSpriteIndex()
+{
 	return this->spriteIndex;
 }
 
-string Sprite::getImageFile(){
-	return this->imageFile;
+int Sprite::getImageFile(){
+	return this->imageIndex;
 }
 
 float Sprite::getX(){

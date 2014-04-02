@@ -1,14 +1,14 @@
 #ifndef VEHICLE_H
 #define VEHICLE_H
 #include <iostream>
+#include <string>
+#include "sprite.h"
 
 class Vehicle : public Sprite{
 
 private:
 	int health, maxSpeed, controlFactor;
 	bool active;
-
-	Vehicle(){} // Private default constructor
 
 public:
 	Vehicle(int sIndex, int maxSpeed, int controlFactor);

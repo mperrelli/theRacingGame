@@ -8,18 +8,17 @@ class Sprite{
 
 private:
 	int spriteIndex;
-	string imageFile;
-
-	Sprite(){} // Private default constructor
+	int imageIndex;
 
 public:
-	Sprite(int index, string image);
-	void createSprite(int index, string image);
+	Sprite();
+	Sprite(int index, int image);
+	void createSprite(int index, int image);
 	void setImage(int index);
 	void setX(float posX);
 	void setY(float posY);
 	int getSpriteIndex();
-	string getImageFile();
+	int getImageFile();
 	float getX();
 	float getY();
 	float getWidth();

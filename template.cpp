@@ -39,6 +39,7 @@ const int TITLESCREEN  = 0,
 		  PICKMAP	   = 2,
 		  PICKVEHICLE  = 3,
 		  INPLAY       = 4;
+
 int g_gameState		   = TITLESCREEN;
 
 // Global Constant Variables
