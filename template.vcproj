@@ -198,7 +198,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Sprite.cpp"
+				RelativePath=".\Environment.h"
 				>
 			</File>
 			<File
@@ -206,15 +206,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\template.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\template.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Vehicle.cpp"
+				RelativePath=".\Track.h"
 				>
 			</File>
 			<File
@@ -223,7 +219,19 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\Environment.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\resource.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Sprite.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\template.cpp"
 			>
 		</File>
 		<File
@@ -232,6 +240,14 @@
 		</File>
 		<File
 			RelativePath=".\template.rc"
+			>
+		</File>
+		<File
+			RelativePath=".\Track.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Vehicle.cpp"
 			>
 		</File>
 	</Files>

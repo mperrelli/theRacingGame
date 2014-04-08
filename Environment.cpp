@@ -1,74 +1,44 @@
 #include "template.h"
-#include "Environment.h"
 #include <string>
-#include <vector>
+#include "Environment.h"
+#include "Track.h"
 using namespace AGK;
+using namespace std;
 
-Environment::Environment(int diff, int t)
+Environment::Environment()
 {
-	difficulty = diff;
-	type = t;
 	positionX = 0;
 	positionY = 0;
 	tileRows = 0;
 	tileCols = 0;
-	trackAtlas = NULL;
-
-	/*
-	* Once we know the difficulty and track type we can then call the next
-	* two functions to construct what makes up the environment
-	*/
-
-	loadTiles();
-
-	generateTrack(t);
-
-	createSprites();
-
-	draw();
-
-	/* 
-	* Once we have done all these functions we should have a complete
-	* environment to play in and that we can update position of on the fly.
-	*/
 }
 
 Environment::~Environment(void)
 {
 }
 
-void Environment::generateTrack(int type)
+void Environment::processTrack()
+{
+	tileRows = map.getRows();
+	tileCols = map.getCols();
+}
+
+void Environment::setTrack(Track t)
 {
 	/*
-	* This is where all the logic for building our 
-	* track will occure. 
+	* Once we know the difficulty and track type we can then call the next
+	* two functions to construct what makes up the environment
 	*/
 
-	switch(type)
-	{
-	case LINEAR:
+	map = t;
 
-		int track[LINEAR_ROWS][LINEAR_COLS] =
-		{ {GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS},
-		  {GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS},
-		  {TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK},
-		  {GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS},
-		  {GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS, GRASS},
-		};
+	processTrack();
 
-		trackAtlas = track;
+	loadTiles();
 
-		positionX = 0;
-		positionY = -80;
+	createSprites();
 
-		tileRows = LINEAR_ROWS;
-		tileCols = LINEAR_COLS;
-
-		break;
-	case CYCLICAL:
-
-		break;
-	}
+	draw();
 }
 
 void Environment::updateEnvironment()
@@ -151,7 +121,7 @@ void Environment::createSprites()
 		for (int c = 0; c < tileCols; c++)
 		{
 			// Create a sprite for this tile.
-			agk::CreateSprite(spriteIndex, trackAtlas[r][c]);
+			agk::CreateSprite(spriteIndex, map.trackAtlas[r][c]);
 
 			// Increment sprite Index
 			spriteIndex++;

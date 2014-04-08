@@ -8,12 +8,13 @@
 
 // Includes, namespace and prototypes
 #include "template.h"
-#include "sprite.h"
 #include <string>
 using namespace AGK;
 using namespace std;
-#include "sprite.h"
-#include "vehicle.h"
+#include "Sprite.h"
+#include "Vehicle.h"
+#include "Environment.h"
+#include "Track.h"
 app App;
 
 // Function prototypes
@@ -40,13 +41,19 @@ const int TITLESCREEN  = 0,
 		  PICKVEHICLE  = 3,
 		  INPLAY       = 4;
 
-int g_gameState		   = TITLESCREEN;
+int g_gameState		   = PICKMAP;
 
 // Global Constant Variables
 const int SHOW		 = 1,
 		  HIDE		 = 0,
 		  LOOP_TRUE  = 1,
 		  LOOP_FALSE = 0;
+
+const int MAX_TRACKS = 10;
+
+Track tracks[MAX_TRACKS];
+
+Environment env;
 
 // Begin app, called once at the start
 void app::Begin( void )
@@ -67,6 +74,9 @@ void app::Begin( void )
 
 	// Play Title Screen Music
 	agk::PlayMusic(TITLE_SCREEN_MUSIC, LOOP_TRUE);
+
+	loadMaps();
+
 }
 
 // Main loop, called every frame
@@ -106,6 +116,10 @@ void app::Loop ( void )
 		*
 		* The user should also be selecting a difficulty here
 		*/
+
+		env.setTrack(tracks[0]);
+
+		g_gameState = INPLAY;
 
 		break;
 
@@ -158,4 +172,27 @@ void generateInstructions(){
 	if(agk::GetRawKeyPressed(AGK_KEY_ENTER)){
 		g_gameState = PICKMAP;
 	}
+}
+
+void loadMaps()
+{
+	// TEST: loading a test track in on the fly
+
+	// Constants for the image indecies
+	static const int BG            = 10;
+	static const int TRACK         = 11;
+
+	int track[20][20] =
+		{ {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
+		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
+		  {TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK},
+		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
+		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
+		};
+
+	tracks[0].setTrack(track);
+	tracks[0].setRows(5);
+	tracks[0].setCols(10);
+	tracks[0].setName("TestMap1");
+	tracks[0].setDescription("This is a test description");
 }

@@ -1,4 +1,8 @@
 #pragma once
+#include "template.h"
+#include <string>
+#include "track.h"
+using namespace std;
 
 class Environment
 {
@@ -9,8 +13,8 @@ private:
 	static const int TRACK_TILE_SIZE = 128;
 	static const int OBSTACLE_TILE_SIZE = 32;
 
-	static const int LINEAR_ROWS = 5;
-	static const int LINEAR_COLS = 10;
+	static const int TRACK_MAX_SIZE_ROWS = 20;
+	static const int TRACK_MAX_SIZE_COLS = 20;
 
 	static const int TRACK_ATLAST_START_INDEX = 50;
 
@@ -21,13 +25,10 @@ private:
 	static const int BARRIER       = 13;
 	static const int BARRIER_TURN  = 14;
 
-	int difficulty;
-	int type;
+	Track map;
 
 	float positionX;
 	float positionY;
-
-	int * trackAtlas;
 
 	int tileRows;
 	int tileCols;
@@ -36,14 +37,15 @@ private:
 	void createSprites();
 
 public:
-	Environment(int difficulty, int type);
+	Environment();
 	~Environment(void);
 
-	void generateTrack(int type);
+	void processTrack();
 	void updateEnvironment();
 	void setPositionX(float posX);
 	void setPositionY(float posY);
 	void draw();
+	void setTrack(Track t);
 
 	float getPositionX();
 	float getPositionY();
