@@ -20,6 +20,7 @@ app App;
 // Function prototypes
 void generateTitleScreen();
 void generateInstructions();
+void loadMaps();
 
 // Height and width of the screen
 const int SCREEN_WIDTH  = 640;
@@ -49,10 +50,14 @@ const int SHOW		 = 1,
 		  LOOP_TRUE  = 1,
 		  LOOP_FALSE = 0;
 
+
+// An array of tracks for easy use. This should be replaced
+// with a linked list later
 const int MAX_TRACKS = 10;
 
 Track tracks[MAX_TRACKS];
 
+// Declare environment
 Environment env;
 
 // Begin app, called once at the start
@@ -117,6 +122,7 @@ void app::Loop ( void )
 		* The user should also be selecting a difficulty here
 		*/
 
+		// Loads a track into the environment
 		env.setTrack(tracks[0]);
 
 		g_gameState = INPLAY;
@@ -174,6 +180,7 @@ void generateInstructions(){
 	}
 }
 
+// Load all maps from the resources folder
 void loadMaps()
 {
 	// TEST: loading a test track in on the fly

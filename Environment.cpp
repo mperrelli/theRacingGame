@@ -26,8 +26,10 @@ void Environment::processTrack()
 void Environment::setTrack(Track t)
 {
 	/*
-	* Once we know the difficulty and track type we can then call the next
-	* two functions to construct what makes up the environment
+	* Once we get the track we are using we can then assign it
+	* to the environment and process it. We get its meta data
+	* load all its images to AGK. Create the necessary sprites
+	* and then draw the game to the screen
 	*/
 
 	map = t;

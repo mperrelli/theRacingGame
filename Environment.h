@@ -7,14 +7,8 @@ using namespace std;
 class Environment
 {
 private:
-	static const int LINEAR = 1;
-	static const int CYCLICAL = 2;
-
 	static const int TRACK_TILE_SIZE = 128;
 	static const int OBSTACLE_TILE_SIZE = 32;
-
-	static const int TRACK_MAX_SIZE_ROWS = 20;
-	static const int TRACK_MAX_SIZE_COLS = 20;
 
 	static const int TRACK_ATLAST_START_INDEX = 50;
 
@@ -24,7 +18,12 @@ private:
 	static const int TRACK_TURN    = 12;
 	static const int BARRIER       = 13;
 	static const int BARRIER_TURN  = 14;
-
+	
+	/*
+	* This is the map instance that is loaded into the game currently.
+	*
+	* This should be changed to a pointer later
+	*/
 	Track map;
 
 	float positionX;
