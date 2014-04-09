@@ -6,28 +6,27 @@ using namespace std;
 
 class Sprite{
 
-private:
+protected:
 	int spriteIndex;
 	int imageIndex;
 
 public:
 	Sprite();
-	Sprite(int index, int image);
 	void createSprite();
 	void deleteSprite();
-	void setVisible(bool value);
-	void setColor(char color);
-	void setImage(int index);
-	void setX(float posX);
-	void setY(float posY);
 	int getSpriteIndex();
-	int getImageFile();
+	int getImageIndex();
 	float getX();
 	float getY();
 	float getWidth();
 	float getHeight();
 	float getCenterX();
 	float getCenterY();
+	void setVisible(bool value);
+	void setImage(int index);
+	void setX(float posX);
+	void setY(float posY);
+	void setValues(int spriteIndex, int imageIndex);
 };
 
 #endif
