@@ -9,64 +9,74 @@
 // Includes, namespace and prototypes
 #include "template.h"
 #include <string>
-#include <list>
 using namespace AGK;
 using namespace std;
 #include "Sprite.h"
 #include "Vehicle.h"
 #include "Environment.h"
 #include "Track.h"
-<<<<<<< HEAD
 #include "log.h"
-=======
->>>>>>> Created a screen where user can choose car color.
 app App;
 
-// Function prototypes
+/***********************/
+/* FUNCTION PROTOTYPES */
+/***********************/
 void generateTitleScreen();
 void generateInstructions();
-<<<<<<< HEAD
-=======
 void generateCarScreen();
 void chooseCarColor();
->>>>>>> Created a screen where user can choose car color.
 void loadMaps();
+void chooseCarType();
 
-// Height and width of the screen
-const int SCREEN_WIDTH  = 640;
-const int SCREEN_HEIGHT = 480;
 
+/***************************/
+/* IMAGE/SPRITE ATTRIBUTES */
+/***************************/
 // Image indexes
-const int TITLE_SCREEN_BG = 1;
-const int CAR = 2;
-const int CHOOSE_CAR_SCREEN = 3;
-const int RED = 4;
-const int GREEN = 5;
-const int BLUE = 6;
+const int TITLE_SCREEN_BG		  = 1;
+const int CAR					  = 2;
+const int CHOOSE_CAR_COLOR_SCREEN = 3;
+const int RED					  = 4;
+const int GREEN					  = 5;
+const int BLUE					  = 6;
+const int CHOOSE_CAR_TYPE_SCREEN  = 7;
+const int SPEED					  = 8;
+const int BALANCE				  = 9;
+const int CONTROL				  = 10;
 
 // Sprite indexes
-const int TITLE_SCREEN_BG_INDEX = 1;
-const int CAR_INDEX = 2;
-const int CHOOSE_CAR_SCREEN_INDEX = 3;
-const int RED_INDEX = 4;
-const int GREEN_INDEX = 5;
-const int BLUE_INDEX = 6;
+const int TITLE_SCREEN_BG_INDEX			= 1;
+const int CAR_INDEX						= 2;
+const int CHOOSE_CAR_COLOR_SCREEN_INDEX = 3;
+const int RED_INDEX						= 4;
+const int GREEN_INDEX					= 5;
+const int BLUE_INDEX					= 6;
+const int CHOOSE_CAR_TYPE_SCREEN_INDEX  = 7;
+const int SPEED_INDEX					= 8;
+const int BALANCE_INDEX					= 9;
+const int CONTROL_INDEX					= 10;
 
 // Sound and Music indexes
 const int TITLE_SCREEN_MUSIC = 1;
 
-// Gamestates
+
+/*************************/
+/* GAMESTATES ATTRIBUTES */
+/*************************/
 const int TITLESCREEN  = 0,
 	      INSTRUCTIONS = 1,
 		  PICKMAP	   = 2,
-		  PICKVEHICLE  = 3,
-		  INPLAY       = 4;
+		  PICKCARCOLOR = 3,
+		  PICKCARTYPE  = 4,
+		  INPLAY       = 5;
 
-int g_gameState		   = PICKMAP;
+int	g_gameState		   = TITLESCREEN;
 
-// Global Constant Variables
-const int SHOW		 = 1,
-		  HIDE		 = 0,
+/*****************************/
+/* GLOBAL CONSTANT VARIABLES */
+/*****************************/
+const int SCREEN_WIDTH  = 640,
+		  SCREEN_HEIGHT = 480,
 		  LOOP_TRUE  = 1,
 		  LOOP_FALSE = 0;
 
@@ -74,21 +84,20 @@ const int SHOW		 = 1,
 // An array of tracks for easy use. This should be replaced
 // with a linked list later
 const int MAX_TRACKS = 10;
-<<<<<<< HEAD
 int g_tracksAmt = 0;
-=======
->>>>>>> Created a screen where user can choose car color.
 
 //Track tracks[MAX_TRACKS];
 
 // Declare environment
 Environment env;
 
-<<<<<<< HEAD
-=======
 list<Sprite> sprites;
 
->>>>>>> Created a screen where user can choose car color.
+/****************************/
+/* SPRITE/VEHICLE INSTANCES */
+/****************************/
+Vehicle userCar;
+
 // Begin app, called once at the start
 void app::Begin( void )
 {
@@ -97,20 +106,29 @@ void app::Begin( void )
 	agk::SetVirtualResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Load Sounds and Music
-	agk::LoadMusic(TITLE_SCREEN_MUSIC, "resources/title_screen_music.mp3");
+	agk::LoadMusic(TITLE_SCREEN_MUSIC,		"resources/title_screen_music.mp3");
 
 	// Load Images
-	agk::LoadImage(TITLE_SCREEN_BG, "resources/title_screen_bg.jpg");
-	agk::LoadImage(CAR, "resources/car.gif");
-	agk::LoadImage(CHOOSE_CAR_SCREEN, "resources/choose_car_screen.jpg");
-	agk::LoadImage(RED, "resources/RED.jpg");
-	agk::LoadImage(GREEN, "resources/GREEN.jpg");
-	agk::LoadImage(BLUE, "resources/BLUE.jpg");
+	agk::LoadImage(TITLE_SCREEN_BG,		    "resources/title_screen_bg.jpg");
+	agk::LoadImage(CAR,					    "resources/car.gif");
+	agk::LoadImage(CHOOSE_CAR_COLOR_SCREEN, "resources/choose_car_color_screen.jpg");
+	agk::LoadImage(RED,						"resources/RED.jpg");
+	agk::LoadImage(GREEN,					"resources/GREEN.jpg");
+	agk::LoadImage(BLUE,					"resources/BLUE.jpg");
+	agk::LoadImage(CHOOSE_CAR_TYPE_SCREEN,	"resources/choose_car_type_screen.jpg");
+	agk::LoadImage(SPEED,					"resources/speed.png");
+	agk::LoadImage(BALANCE,					"resources/balance.png");
+	agk::LoadImage(CONTROL,					"resources/control.png");
 
 	// Play Title Screen Music
 	agk::PlayMusic(TITLE_SCREEN_MUSIC, LOOP_TRUE);
 
-	loadMaps();
+	// Create sprites
+	userCar.setValues(CAR, CAR_INDEX);
+	userCar.createSprite();
+
+	// Set sprite initial visibilities
+	userCar.setVisible(false);
 
 }
 
@@ -155,23 +173,23 @@ void app::Loop ( void )
 		// Loads a track into the environment
 		env.setTrack(tracks[0]);
 
-<<<<<<< HEAD
-		g_gameState = INPLAY;
-=======
-		g_gameState = PICKVEHICLE;
->>>>>>> Created a screen where user can choose car color.
+		g_gameState = PICKCARCOLOR;
 
 		break;
 
-	case PICKVEHICLE:
+	case PICKCARCOLOR:
 
 		/*
 		* The user will select a vehicle. I'm not really sure where we want to go with this.
 		* We should at least be selecting between control, speed or balanced and a color.
 		*/
 
-		generateCarScreen();
-		g_gameState = INPLAY;
+		chooseCarColor();
+		break;
+
+	case PICKCARTYPE:
+
+		chooseCarType();
 		break;
 
 	case INPLAY:
@@ -182,7 +200,6 @@ void app::Loop ( void )
 		* environment
 		*/
 
-		loadMaps();
 		break;
 	}
 
@@ -195,13 +212,10 @@ void app::End ( void )
 {
 }
 
-void chooseCarColor(){
-
-}
-
 void generateTitleScreen()
 {
-	Sprite titleScreen(TITLE_SCREEN_BG, TITLE_SCREEN_BG_INDEX);
+	Sprite titleScreen;
+	titleScreen.setValues(TITLE_SCREEN_BG, TITLE_SCREEN_BG_INDEX);
 	titleScreen.createSprite();
 
 
@@ -212,23 +226,24 @@ void generateTitleScreen()
 	}
 }
 
-void generateCarScreen(){
+void chooseCarColor(){
 
 	// Create necessary sprites for car creation
-	Sprite carScreen(CHOOSE_CAR_SCREEN, CHOOSE_CAR_SCREEN_INDEX);
-	Sprite car(CAR, CAR_INDEX);
-	Sprite red(RED, RED_INDEX);
-	Sprite green(GREEN, GREEN_INDEX);
-	Sprite blue(BLUE, BLUE_INDEX);
+	Sprite carScreen, red, green, blue;
+
+	carScreen.setValues(CHOOSE_CAR_COLOR_SCREEN, CHOOSE_CAR_COLOR_SCREEN_INDEX);
+	red.setValues(RED, RED_INDEX);
+	green.setValues(GREEN, GREEN_INDEX);
+	blue.setValues(BLUE, BLUE_INDEX);
+
 	carScreen.createSprite();
-	car.createSprite();
 	red.createSprite();
 	green.createSprite();
 	blue.createSprite();
 
 	// Unhide this to see if car is actually changing colors
 	// Tested and it works
-	car.setVisible(false);
+	userCar.setVisible(false);
 
 	// Set positions
 	red.setX(SCREEN_WIDTH / 2 - red.getCenterX());
@@ -247,13 +262,13 @@ void generateCarScreen(){
 		switch(agk::GetSpriteHit(mouseX, mouseY))
 		{
 			case RED:
-				car.setColor('R');
+				userCar.setColor('R');
 				break;
 			case GREEN:
-				car.setColor('G');
+				userCar.setColor('G');
 				break;
 			case BLUE:
-				car.setColor('B');
+				userCar.setColor('B');
 				break;
 			default:
 				break;
@@ -265,11 +280,62 @@ void generateCarScreen(){
 		green.deleteSprite();
 		blue.deleteSprite();
 
-		// Next game state
+		g_gameState = PICKCARTYPE;
+	}
+}
+
+void chooseCarType(){
+
+	// Create necessary sprites for car creation
+	Sprite carTypeScreen, speed, control, balance;
+
+	carTypeScreen.setValues(CHOOSE_CAR_TYPE_SCREEN, CHOOSE_CAR_TYPE_SCREEN_INDEX);
+	speed.setValues(SPEED, SPEED_INDEX);
+	control.setValues(CONTROL, CONTROL_INDEX);
+	balance.setValues(BALANCE, BALANCE_INDEX);
+
+	carTypeScreen.createSprite();
+	speed.createSprite();
+	control.createSprite();
+	balance.createSprite();
+
+	// Set positions
+	speed.setX(20);
+	speed.setY(SCREEN_HEIGHT / 2 - speed.getCenterY());
+	balance.setX(SCREEN_WIDTH / 2 - balance.getCenterX());
+	balance.setY(SCREEN_HEIGHT / 2 - balance.getCenterY());
+	control.setX(SCREEN_WIDTH - control.getWidth() - 20);
+	control.setY(SCREEN_HEIGHT / 2 - control.getCenterY());
+
+	// Check to see what color car user wants
+	if (agk::GetRawMouseLeftPressed())
+	{
+		float mouseX = agk::GetRawMouseX();
+		float mouseY = agk::GetRawMouseY();
+
+		switch(agk::GetSpriteHit(mouseX, mouseY))
+		{
+			case SPEED:
+				// Do something with Vehicle userCar's attributes
+				break;
+			case BALANCE:
+				// Do something with Vehicle userCar's attributes
+				break;
+			case CONTROL:
+				// Do something with Vehicle userCar's attributes
+				break;
+			default:
+				break;
+		}
+
+		// Destroy sprites not in use
+		carTypeScreen.deleteSprite();
+		speed.deleteSprite();
+		balance.deleteSprite();
+		control.deleteSprite();
+
 		g_gameState = INPLAY;
 	}
-
-	
 
 }
 
@@ -282,6 +348,7 @@ void generateInstructions(){
 	if(agk::GetRawKeyPressed(AGK_KEY_ENTER)){
 		g_gameState = PICKMAP;
 	}
+<<<<<<< HEAD
 }
 
 // Load all maps from the resources folder
@@ -290,7 +357,6 @@ void loadMaps()
 	// TEST: loading a test track in on the fly
 
 	// Constants for the image indecies
-<<<<<<< HEAD
 	const int BG               = 10;
 	const int TRACK_H          = 11;
 	const int TRACK_V          = 12;
@@ -308,24 +374,15 @@ void loadMaps()
 	const int BARRIER_END_NS   = 24;
 	const int BARRIER_END_SN   = 25;
 	const int BARRIER_END_WE   = 26;
-=======
-	static const int BG            = 10;
-	static const int TRACK         = 11;
->>>>>>> Created a screen where user can choose car color.
 
 	int track[20][20] =
 		{ {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
 		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
-<<<<<<< HEAD
 		  {TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H},
-=======
-		  {TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK},
->>>>>>> Created a screen where user can choose car color.
 		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
 		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
 		};
 
-<<<<<<< HEAD
 	int objects[80][80] =
 	{ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -378,11 +435,5 @@ void loadMaps()
 	tracks[0].setRows(5);
 	tracks[0].setCols(10);
 	tracks[0].setName("map1");
-=======
-	tracks[0].setTrack(track);
-	tracks[0].setRows(5);
-	tracks[0].setCols(10);
-	tracks[0].setName("TestMap1");
->>>>>>> Created a screen where user can choose car color.
 	tracks[0].setDescription("This is a test description");
 }
