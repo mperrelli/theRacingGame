@@ -230,12 +230,12 @@ void generateCarScreen(){
 	car.setVisible(false);
 
 	// Set positions
-	red.setX(red.getCenterX() - red.getWidth() / 2);
-	red.setY(red.getCenterY() / 2 - red.getHeight() / 2);
-	green.setX(green.getCenterX() - green.getWidth() / 2);
-	green.setY(green.getCenterY() - green.getHeight() / 2);
-	blue.setX(blue.getCenterX() - blue.getWidth() / 2);
-	blue.setY(480 / 1.3 - blue.getHeight() / 2);
+	red.setX(SCREEN_WIDTH / 2 - red.getCenterX());
+	red.setY(SCREEN_HEIGHT / 2 - red.getCenterY());
+	green.setX(SCREEN_WIDTH - green.getCenterX();
+	green.setY(SCREEN_HEIGHT - green.getCenterY());
+	blue.setX(SCREEN_WIDTH - blue.getCenterX());
+	blue.setY(SCREEN_HEIGHT / 1.3 - blue.getCenterY());
 
 	// Check to see what color car user wants
 	if (agk::GetRawMouseLeftPressed())
