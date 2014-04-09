@@ -12,10 +12,10 @@ Sprite::Sprite()
 	imageIndex = NULL;
 }
 
-Sprite::Sprite(int index, int image)
+void Sprite::setValues(int sIndex, int	iIndex)
 {
-	spriteIndex = index;
-	imageIndex = image;
+	spriteIndex = sIndex;
+	imageIndex = iIndex;
 }
 
 void Sprite::createSprite()
@@ -31,32 +31,9 @@ void Sprite::setVisible(bool value)
 		agk::SetSpriteVisible(spriteIndex, 0);
 }
 
-void Sprite::setImage(int index)
-{
-
-}
-
 void Sprite::deleteSprite()
 {
 	agk::DeleteSprite(spriteIndex);
-}
-
-void Sprite::setColor(char color)
-{
-	// 'R' for RED
-	// 'G' for GREEN
-	// 'B' FOR BLUE
-	switch(color)
-	{
-		case 'R': 
-			agk::SetSpriteColor(spriteIndex, 255, 0, 0, 255);
-			break;
-		case 'G':
-			agk::SetSpriteColor(spriteIndex, 50, 205, 50, 255);
-			break;
-		default:
-			agk::SetSpriteColor(spriteIndex, 0, 199, 255, 255);
-	}
 }
 
 void Sprite::setX(float posX)
@@ -71,33 +48,40 @@ void Sprite::setY(float posY)
 
 int Sprite::getSpriteIndex()
 {
-	return this->spriteIndex;
+	return tspriteIndex;
 }
 
-int Sprite::getImageFile(){
-	return this->imageIndex;
+int Sprite::getImageIndex()
+{
+	return imageIndex;
 }
 
-float Sprite::getX(){
+float Sprite::getX()
+{
 	return agk::GetSpriteX(spriteIndex);
 }
 
-float Sprite::getY(){
+float Sprite::getY()
+{
 	return agk::GetSpriteY(spriteIndex);
 }
 
-float Sprite::getWidth(){
+float Sprite::getWidth()
+{
 	return agk::GetSpriteWidth(spriteIndex);
 }
 
-float Sprite::getHeight(){
+float Sprite::getHeight()
+{
 	return agk::GetSpriteHeight(spriteIndex);
 }
 
-float Sprite::getCenterX(){
+float Sprite::getCenterX()
+{
 	return getWidth() / 2;
 }
 
-float Sprite::getCenterY(){
+float Sprite::getCenterY()
+{
 	return getHeight() / 2;
 }
