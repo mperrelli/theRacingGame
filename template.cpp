@@ -68,7 +68,7 @@ const int SHOW		 = 1,
 // with a linked list later
 const int MAX_TRACKS = 10;
 
-Track tracks[MAX_TRACKS];
+//Track tracks[MAX_TRACKS];
 
 // Declare environment
 Environment env;
@@ -164,6 +164,7 @@ void app::Loop ( void )
 		* environment
 		*/
 
+		loadMaps();
 		break;
 	}
 
@@ -213,10 +214,10 @@ void generateCarScreen(){
 
 	// Set positions
 	red.setX(SCREEN_WIDTH / 2 - red.getCenterX());
-	red.setY(SCREEN_HEIGHT / 2 - red.getCenterY());
-	green.setX(SCREEN_WIDTH - green.getCenterX();
-	green.setY(SCREEN_HEIGHT - green.getCenterY());
-	blue.setX(SCREEN_WIDTH - blue.getCenterX());
+	red.setY(SCREEN_HEIGHT / 4 - red.getCenterY());
+	green.setX(SCREEN_WIDTH / 2 - green.getCenterX());
+	green.setY(SCREEN_HEIGHT / 2 - green.getCenterY());
+	blue.setX(SCREEN_WIDTH / 2 - blue.getCenterX());
 	blue.setY(SCREEN_HEIGHT / 1.3 - blue.getCenterY());
 
 	// Check to see what color car user wants
