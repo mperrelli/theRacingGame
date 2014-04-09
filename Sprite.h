@@ -13,7 +13,10 @@ private:
 public:
 	Sprite();
 	Sprite(int index, int image);
-	void createSprite(int index, int image);
+	void createSprite();
+	void deleteSprite();
+	void setVisible(bool value);
+	void setColor(char color);
 	void setImage(int index);
 	void setX(float posX);
 	void setY(float posY);
