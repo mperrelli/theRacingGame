@@ -95,9 +95,9 @@ float Sprite::getHeight(){
 }
 
 float Sprite::getCenterX(){
-	return 640 / 2;
+	return getWidth() / 2;
 }
 
 float Sprite::getCenterY(){
-	return 480 / 2;
+	return getHeight() / 2;
 }
