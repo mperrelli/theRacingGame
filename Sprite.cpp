@@ -48,7 +48,7 @@ void Sprite::setY(float posY)
 
 int Sprite::getSpriteIndex()
 {
-	return tspriteIndex;
+	return spriteIndex;
 }
 
 int Sprite::getImageIndex()
