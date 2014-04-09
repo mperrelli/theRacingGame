@@ -2,7 +2,7 @@
 #define VEHICLE_H
 #include <iostream>
 #include <string>
-#include "sprite.h"
+#include "Sprite.h"
 
 class Vehicle : public Sprite{
 
@@ -11,16 +11,16 @@ private:
 	bool active;
 
 public:
-	Vehicle(int sIndex, int maxSpeed, int controlFactor);
-	void setMaxSpeed(int maxSpeed);
-	void setControlFactor(int controlFactor);
-	void setActive(bool active);
-	void setColor(string color);
-	void setHealth(int health);
-	int getHealth();
-	bool isActive();
-	int getMaxSpeed();
+	Vehicle();
 	int getControlFactor();
+	int getHealth();
+	int getMaxSpeed();
+	bool isActive();
+	void setActive(bool active);
+	void setColor(char color);
+	void setControlFactor(int controlFactor);
+	void setHealth(int health);
+	void setMaxSpeed(int maxSpeed);
 };
 
 #endif
