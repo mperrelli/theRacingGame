@@ -15,6 +15,7 @@ using namespace std;
 #include "Vehicle.h"
 #include "Environment.h"
 #include "Track.h"
+#include "log.h"
 app App;
 
 // Function prototypes
@@ -197,9 +198,33 @@ void loadMaps()
 		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
 		};
 
+	string assets[17] =
+	{
+		"grass.png",
+		"trackV.png",
+		"trackH.png",
+		"trackTurnEN.png",
+		"trackTurnES.png",
+		"trackTurnWN.png",
+		"trackTurnWS.png",
+		"barrierH.png",
+		"barrierV.png",
+		"barrierTurnEN.png",
+		"barrierTurnES.png",
+		"barrierTurnWN.png",
+		"barrierTurnWS.png",
+		"barrierEndEW.png",
+		"barrierEndNS.png",
+		"barrierEndWE.png",
+		"barrierEndSN.png"
+	};
+
+	tracks[0].setStartPosX(256);
+	tracks[0].setStartPosY(320);
+	tracks[0].setAssets(assets);
 	tracks[0].setTrack(track);
 	tracks[0].setRows(5);
 	tracks[0].setCols(10);
-	tracks[0].setName("TestMap1");
+	tracks[0].setName("map1");
 	tracks[0].setDescription("This is a test description");
 }

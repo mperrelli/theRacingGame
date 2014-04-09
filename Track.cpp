@@ -1,6 +1,8 @@
 #include "template.h"
 #include <string>
+#include <sstream>
 #include "Track.h"
+#include "Log.h"
 using namespace std;
 
 Track::Track()
@@ -9,6 +11,8 @@ Track::Track()
 	description = "none";
 	rows = TRACK_MAX_SIZE_ROWS;
 	cols = TRACK_MAX_SIZE_COLS;
+	startPosX = 50;
+	startPosY = 50;
 
 	for(int i = 0; i < rows; i++)
 	{
@@ -16,6 +20,12 @@ Track::Track()
 		{
 			trackAtlas[i][j] = 0;
 		}
+	}
+
+
+	for(int i = 0; i < MAX_ASSETS; i++)
+	{
+		assets[i] = "";
 	}
 }
 
@@ -63,6 +73,26 @@ void Track::setCols(int c)
 	cols = c;
 }
 
+void Track::setStartPosX(int posX)
+{
+	startPosX = posX;
+}
+
+void Track::setStartPosY(int posY)
+{
+	startPosY = posY;
+}
+
+int Track::getStartPosX()
+{
+	return startPosX;
+}
+
+int Track::getStartPosY()
+{
+	return startPosY;
+}
+
 void Track::setTrack(int track[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS])
 {
 	for(int i = 0; i < rows; i++)
@@ -74,3 +104,23 @@ void Track::setTrack(int track[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS])
 	}
 }
 
+/*
+*	Loads all the images names from the map into a track instance.
+*/
+void Track::setAssets(string a[MAX_ASSETS])
+{
+	for(int i = 0; i < MAX_ASSETS; i++)
+	{
+		assets[i] = a[i];
+	}
+}
+
+/*
+*	Returns the path to a particular image for the map.
+*/
+string Track::getPathToAsset(int index)
+{
+	string path = "resources/" + getName() + "/" + assets[index] + "";
+
+	return path;
+}

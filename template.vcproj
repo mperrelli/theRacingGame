@@ -202,6 +202,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Log.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sprite.h"
 				>
 			</File>
@@ -220,6 +224,10 @@
 		</Filter>
 		<File
 			RelativePath=".\Environment.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Log.cpp"
 			>
 		</File>
 		<File

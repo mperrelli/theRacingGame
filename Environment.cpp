@@ -2,6 +2,7 @@
 #include <string>
 #include "Environment.h"
 #include "Track.h"
+#include "log.h"
 using namespace AGK;
 using namespace std;
 
@@ -21,17 +22,17 @@ void Environment::processTrack()
 {
 	tileRows = map.getRows();
 	tileCols = map.getCols();
+
+	positionX = SCREEN_CENTER_X - map.getStartPosX();
+	positionY = SCREEN_CENTER_Y - map.getStartPosY();
 }
 
+/*
+*	We are attaching a map to the environment here. Then calling
+*	all the subsequent actions that need to take place to load that map.
+*/
 void Environment::setTrack(Track t)
 {
-	/*
-	* Once we get the track we are using we can then assign it
-	* to the environment and process it. We get its meta data
-	* load all its images to AGK. Create the necessary sprites
-	* and then draw the game to the screen
-	*/
-
 	map = t;
 
 	processTrack();
@@ -43,13 +44,14 @@ void Environment::setTrack(Track t)
 	draw();
 }
 
+/*
+*	The controller functions on the template will call this function
+*	directly to update the environment and everything that comprises the
+*	environment based on keyboard and mouse clicks
+*/
 void Environment::updateEnvironment()
 {
-	/*
-	* The controller functions on the template will call this function
-	* directly to updat ethe environment and everything that comprises the
-	* environment based on keyboard and mouse clicks
-	*/
+	
 }
 
 void Environment::setPositionX(float posX)
@@ -72,10 +74,15 @@ float Environment::getPositionY()
 	return positionY;
 }
 
+/*
+*	Draws the current state of the environment. This will simply 
+*	move the track atlas around according to current environment
+*	position.
+*/
 void Environment::draw()
 {
 	// Variables for the tile coordinates
-	float x = 0, y = 0;
+	float x = getPositionX(), y = getPositionY();
 
 	// Variable to temporarily hold a sprite index
 	int spriteIndex = TRACK_ATLAST_START_INDEX;
@@ -83,8 +90,8 @@ void Environment::draw()
 	// Display all the tiles specified in the map.
 	for (int r = 0; r < tileRows; r++)
 	{
-		// Set x to 0.
-		x = 0;
+		// Set x to default X position.
+		x = getPositionX();
 
 		// Display all the tiles in this row.
 		for (int c = 0; c < tileCols; c++)
@@ -104,15 +111,27 @@ void Environment::draw()
 	}
 }
 
+/*
+*	Loads all the images from the map into the environment as
+*	AGK images. This is done so that we can use these images 
+*	to make sprites later.
+*/
 void Environment::loadTiles()
 {  
-   agk::LoadImage(GRASS,          "Resources/grass.png");
-   agk::LoadImage(TRACK,          "Resources/track.png");
-   agk::LoadImage(TRACK_TURN,     "Resources/trackturn.png");
-   agk::LoadImage(BARRIER,        "Resources/barrier.png");
-   agk::LoadImage(BARRIER_TURN,   "Resources/barrierturn.png");
+	string temp;
+
+	for(int i = 0; i < map.MAX_ASSETS; i++)
+	{
+		temp = map.getPathToAsset(i);
+		const char * c = temp.c_str();
+		agk::LoadImage(ASSETS_START_INDEX + i, c);
+	}
 }
 
+/*
+*	Creates all the sprites from the maps trackAtlas.
+*	This should only need to be done once per map load.
+*/
 void Environment::createSprites()
 {
 	int spriteIndex = TRACK_ATLAST_START_INDEX;
