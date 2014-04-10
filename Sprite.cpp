@@ -1,87 +1,147 @@
-#include "Sprite.h"
 #include "template.h"
-#include <iostream>
-
-using namespace std;
+#include <string>
 using namespace AGK;
+using namespace std;
+#include "sprite.h"
 
-
+// This is the default constructor for the Sprite
 Sprite::Sprite()
 {
-	spriteIndex = NULL;
-	imageIndex = NULL;
+   spriteIndex = 1;
+   imageFile = "";
 }
 
-void Sprite::setValues(int sIndex, int	iIndex)
+// This Sprite class constructor accepts as arguments
+// the sprite index and the name of the image file
+Sprite::Sprite(int index, string filename)
 {
-	spriteIndex = sIndex;
-	imageIndex = iIndex;
+   spriteIndex = index;
+   imageFile = filename;
 }
 
 void Sprite::createSprite()
 {
-	agk::CreateSprite(spriteIndex, imageIndex);
+   // If the sprite does not already exist,
+   // then create it.
+   if (!agk::GetSpriteExists(spriteIndex))
+   {
+      agk::CreateSprite(spriteIndex, imageFile.c_str());
+   }
+}
+
+void Sprite::createSprite(int index, string filename)
+{
+   // Set the member variables.
+   spriteIndex = index;
+   imageFile = filename;
+
+   // If the sprite does not already exist,
+   // then create it.
+   if (!agk::GetSpriteExists(spriteIndex))
+   {
+      agk::CreateSprite(spriteIndex, imageFile.c_str());
+   }
+}
+
+void Sprite::createSprite(int index, int filename)
+{
+   // Set the member variables.
+   spriteIndex = index;
+   imageFile = agk::GetImageFilename(filename);
+
+   // If the sprite does not already exist,
+   // then create it.
+   if (!agk::GetSpriteExists(spriteIndex))
+   {
+      agk::CreateSprite(spriteIndex, filename);
+   }
+}
+
+// The Sprite::setPosition member function sets the
+// sprite's position.
+void Sprite::setPosition(float x, float y)
+{
+   agk::SetSpritePosition(spriteIndex, x, y);
+}
+
+// The Sprite::setX member function sets the
+// sprite's X coordinate.
+void Sprite::setX(float x)
+{
+   agk::SetSpriteX(spriteIndex, x);
+}
+
+// The Sprite::setY member function sets the
+// sprite's Y coordinate.
+void Sprite::setY(float y)
+{
+   agk::SetSpriteY(spriteIndex, y);
+}
+
+// The Sprite::setImage member function
+// sprite's image
+void Sprite::setImage(int imgIndex)
+{
+	agk::SetSpriteImage(spriteIndex, imgIndex);
 }
 
 void Sprite::setVisible(bool value)
 {
-	if(value)
-		agk::SetSpriteVisible(spriteIndex, 1);
-	else
-		agk::SetSpriteVisible(spriteIndex, 0);
+	agk::SetSpriteVisible(spriteIndex, value);
 }
 
-void Sprite::deleteSprite()
+// The Sprite::getSpriteIndex member function
+// returns the sprite's index.
+int Sprite::getSpriteIndex() const
 {
-	agk::DeleteSprite(spriteIndex);
+   return spriteIndex;
 }
 
-void Sprite::setX(float posX)
+// The Sprite::getImageFile member function
+// returns the name of the image file used to 
+// create this sprite.
+string Sprite::getImageFile() const
 {
-	agk::SetSpriteX(spriteIndex, posX);
+   return imageFile;
 }
 
-void Sprite::setY(float posY)
+// The Sprite::getX member function returns the
+// sprite's X coordinate.
+float Sprite::getX() const
 {
-	agk::SetSpriteY(spriteIndex, posY);
+   return agk::GetSpriteX(spriteIndex);
 }
 
-int Sprite::getSpriteIndex()
+// The Sprite::getY member function returns the
+// sprite's Y coordinate.
+float Sprite::getY() const
 {
-	return spriteIndex;
+   return agk::GetSpriteY(spriteIndex);
 }
 
-int Sprite::getImageIndex()
-{
-	return imageIndex;
-}
-
-float Sprite::getX()
-{
-	return agk::GetSpriteX(spriteIndex);
-}
-
-float Sprite::getY()
-{
-	return agk::GetSpriteY(spriteIndex);
-}
-
-float Sprite::getWidth()
+float Sprite::getWidth() const
 {
 	return agk::GetSpriteWidth(spriteIndex);
 }
 
-float Sprite::getHeight()
+float Sprite::getHeight() const
 {
 	return agk::GetSpriteHeight(spriteIndex);
 }
 
-float Sprite::getCenterX()
+float Sprite::getCenterX() const
 {
-	return getWidth() / 2;
+	return getX() + (getWidth() / 2);
 }
 
-float Sprite::getCenterY()
+float Sprite::getCenterY() const
 {
-	return getHeight() / 2;
+	return getY() + (getHeight() / 2);
+}
+
+// The Sprite class destructor deletes the
+// sprite from memory.
+Sprite::~Sprite()
+{
+   agk::DeleteSprite(spriteIndex);
 }

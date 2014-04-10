@@ -100,23 +100,13 @@ void app::Begin( void )
 	agk::LoadMusic(TITLE_SCREEN_MUSIC,		"resources/title_screen_music.mp3");
 
 	// Load Images
-	agk::LoadImage(TITLE_SCREEN_BG,		    "resources/title_screen_bg.jpg");
 	agk::LoadImage(CAR,					    "resources/car.gif");
-	agk::LoadImage(CHOOSE_CAR_COLOR_SCREEN, "resources/choose_car_color_screen.jpg");
-	agk::LoadImage(RED,						"resources/RED.jpg");
-	agk::LoadImage(GREEN,					"resources/GREEN.jpg");
-	agk::LoadImage(BLUE,					"resources/BLUE.jpg");
-	agk::LoadImage(CHOOSE_CAR_TYPE_SCREEN,	"resources/choose_car_type_screen.jpg");
-	agk::LoadImage(SPEED,					"resources/speed.png");
-	agk::LoadImage(BALANCE,					"resources/balance.png");
-	agk::LoadImage(CONTROL,					"resources/control.png");
 
 	// Play Title Screen Music
 	agk::PlayMusic(TITLE_SCREEN_MUSIC, TRUE);
 
 	// Create sprites
-	userCar.setValues(CAR, CAR_INDEX);
-	userCar.createSprite();
+	userCar.createSprite(CAR_INDEX, CAR);
 
 	// Set sprite initial visibilities
 	userCar.setVisible(false);
@@ -205,14 +195,12 @@ void app::End ( void )
 
 void generateTitleScreen()
 {
-	Sprite titleScreen;
-	titleScreen.setValues(TITLE_SCREEN_BG, TITLE_SCREEN_BG_INDEX);
+	Sprite titleScreen(TITLE_SCREEN_BG_INDEX, "resources/title_screen_bg.jpg");
 	titleScreen.createSprite();
-
 
 	// When enter pressed, show instruction screen
 	if(agk::GetRawKeyPressed(AGK_KEY_ENTER)){
-		titleScreen.deleteSprite();
+		titleScreen.~Sprite();
 		g_gameState = INSTRUCTIONS;
 	}
 }
@@ -220,12 +208,10 @@ void generateTitleScreen()
 void chooseCarColor(){
 
 	// Create necessary sprites for car creation
-	Sprite carScreen, red, green, blue;
-
-	carScreen.setValues(CHOOSE_CAR_COLOR_SCREEN, CHOOSE_CAR_COLOR_SCREEN_INDEX);
-	red.setValues(RED, RED_INDEX);
-	green.setValues(GREEN, GREEN_INDEX);
-	blue.setValues(BLUE, BLUE_INDEX);
+	Sprite carScreen(CHOOSE_CAR_COLOR_SCREEN_INDEX, "resources/choose_car_color_screen.jpg"), 
+		   red(RED, "resources/RED.jpg"), 
+		   green(GREEN, "resources/GREEN.jpg"), 
+		   blue(BLUE, "resources/BLUE.jpg");
 
 	carScreen.createSprite();
 	red.createSprite();
@@ -234,7 +220,7 @@ void chooseCarColor(){
 
 	// Unhide this to see if car is actually changing colors
 	// Tested and it works
-	userCar.setVisible(false);
+	userCar.setVisible(FALSE);
 
 	// Set positions
 	red.setX(SCREEN_WIDTH / 2 - red.getCenterX());
@@ -266,10 +252,10 @@ void chooseCarColor(){
 		}
 
 		// Destroy sprites not in use
-		carScreen.deleteSprite();
-		red.deleteSprite();
-		green.deleteSprite();
-		blue.deleteSprite();
+		carScreen.~Sprite();
+		red.~Sprite();
+		green.~Sprite();
+		blue.~Sprite();
 
 		g_gameState = PICKCARTYPE;
 	}
@@ -278,12 +264,10 @@ void chooseCarColor(){
 void chooseCarType(){
 
 	// Create necessary sprites for car creation
-	Sprite carTypeScreen, speed, control, balance;
-
-	carTypeScreen.setValues(CHOOSE_CAR_TYPE_SCREEN, CHOOSE_CAR_TYPE_SCREEN_INDEX);
-	speed.setValues(SPEED, SPEED_INDEX);
-	control.setValues(CONTROL, CONTROL_INDEX);
-	balance.setValues(BALANCE, BALANCE_INDEX);
+	Sprite carTypeScreen(CHOOSE_CAR_TYPE_SCREEN_INDEX, "resources/choose_car_type_screen.jpg"), 
+		   speed(SPEED, "resources/speed.png"), 
+		   control(CONTROL, "resources/control.png"), 
+		   balance(BALANCE, "resources/balance.png");
 
 	carTypeScreen.createSprite();
 	speed.createSprite();
@@ -291,12 +275,13 @@ void chooseCarType(){
 	balance.createSprite();
 
 	// Set positions
-	speed.setX(20);
-	speed.setY(SCREEN_HEIGHT / 2 - speed.getCenterY());
-	balance.setX(SCREEN_WIDTH / 2 - balance.getCenterX());
-	balance.setY(SCREEN_HEIGHT / 2 - balance.getCenterY());
-	control.setX(SCREEN_WIDTH - control.getWidth() - 20);
-	control.setY(SCREEN_HEIGHT / 2 - control.getCenterY());
+	speed.setPosition(20, SCREEN_HEIGHT / 2 - speed.getCenterY());
+
+	balance.setPosition(SCREEN_WIDTH / 2 - balance.getCenterX(), 
+						SCREEN_HEIGHT / 2 - balance.getCenterY());
+
+	control.setPosition(SCREEN_WIDTH - control.getWidth() - 20,
+						SCREEN_HEIGHT / 2 - control.getCenterY());
 
 	// Check to see what color car user wants
 	if (agk::GetRawMouseLeftPressed())
@@ -320,10 +305,10 @@ void chooseCarType(){
 		}
 
 		// Destroy sprites not in use
-		carTypeScreen.deleteSprite();
-		speed.deleteSprite();
-		balance.deleteSprite();
-		control.deleteSprite();
+		carTypeScreen.~Sprite();
+		speed.~Sprite();
+		balance.~Sprite();
+		control.~Sprite();
 
 		g_gameState = INPLAY;
 	}
