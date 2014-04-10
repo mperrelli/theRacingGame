@@ -9,13 +9,20 @@ using namespace std;
 using namespace AGK;
 
 // Constructor
-Vehicle::Vehicle()
+Vehicle::Vehicle() : Sprite()
 {
-	// These values can change, just temporary place holders
-	health = 100;
-	maxSpeed = 100;
-	controlFactor = 1;
-	active = false;
+    health = 100;
+    maxSpeed = 100;
+    controlFactor = 1;
+    active = false;
+}
+
+Vehicle::Vehicle(int sIndex, string image, int maxSpeed, int controlFactor) : Sprite(sIndex, image)
+{
+    health = 100;
+    maxSpeed = maxSpeed;
+    controlFactor = controlFactor;
+    active = false;
 }
 
 int Vehicle::getControlFactor()

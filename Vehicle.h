@@ -12,6 +12,7 @@ private:
 
 public:
 	Vehicle();
+	Vehicle(int sIndex, string image, int maxSpeed, int controlFactor);
 	int getControlFactor();
 	int getHealth();
 	int getMaxSpeed();
