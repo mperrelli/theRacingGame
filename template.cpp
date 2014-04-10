@@ -169,7 +169,6 @@ void app::Loop ( void )
 		* The user should also be selecting a difficulty here
 		*/
 
-		// Loads a track into the environment
 		g_gameState = PICKCARCOLOR;
 
 		break;

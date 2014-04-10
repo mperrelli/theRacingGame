@@ -1,0 +1,24 @@
+# MAPFILE
+# Meta
+
+name=map1;
+description=this is a description of the map;
+rows=20;
+cols=20;
+
+# Asset names
+
+BG=grass.png;
+TRACK=track.png
+
+# Map layout
+
+BG, BG, BG, BG, BG, BG, BG, BG, BG, BG
+BG, BG, BG, BG, BG, BG, BG, BG, BG, BG
+TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK, TRACK
+BG, BG, BG, BG, BG, BG, BG, BG, BG, BG
+BG, BG, BG, BG, BG, BG, BG, BG, BG, BG
+
+
+
+
