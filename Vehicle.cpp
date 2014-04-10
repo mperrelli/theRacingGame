@@ -18,7 +18,7 @@ Vehicle::Vehicle()
 
 int Vehicle::getControlFactor()
 {
-	return controlFactor();
+	return controlFactor;
 }
 
 int Vehicle::getHealth()

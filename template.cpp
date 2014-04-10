@@ -86,12 +86,10 @@ const int SCREEN_WIDTH  = 640,
 const int MAX_TRACKS = 10;
 int g_tracksAmt = 0;
 
-//Track tracks[MAX_TRACKS];
+Track tracks[MAX_TRACKS];
 
 // Declare environment
 Environment env;
-
-list<Sprite> sprites;
 
 /****************************/
 /* SPRITE/VEHICLE INSTANCES */
@@ -130,6 +128,7 @@ void app::Begin( void )
 	// Set sprite initial visibilities
 	userCar.setVisible(false);
 
+	loadMaps();
 }
 
 // Main loop, called every frame
@@ -171,8 +170,6 @@ void app::Loop ( void )
 		*/
 
 		// Loads a track into the environment
-		env.setTrack(tracks[0]);
-
 		g_gameState = PICKCARCOLOR;
 
 		break;
@@ -199,6 +196,8 @@ void app::Loop ( void )
 		* for input and updateing the screen IE updateing the
 		* environment
 		*/
+
+		env.setTrack(tracks[0]);
 
 		break;
 	}
@@ -348,7 +347,6 @@ void generateInstructions(){
 	if(agk::GetRawKeyPressed(AGK_KEY_ENTER)){
 		g_gameState = PICKMAP;
 	}
-<<<<<<< HEAD
 }
 
 // Load all maps from the resources folder
@@ -357,23 +355,24 @@ void loadMaps()
 	// TEST: loading a test track in on the fly
 
 	// Constants for the image indecies
-	const int BG               = 10;
-	const int TRACK_H          = 11;
-	const int TRACK_V          = 12;
-	const int TRACK_TURN_EN    = 13;
-	const int TRACK_TURN_ES    = 14;
-	const int TRACK_TURN_WN    = 15;
-	const int TRACK_TURN_WS    = 16;
-	const int BARRIER_H        = 17;
-	const int BARRIER_V        = 18;
-	const int BARRIER_TURN_EN  = 19;
-	const int BARRIER_TURN_ES  = 20;
-	const int BARRIER_TURN_WN  = 21;
-	const int BARRIER_TURN_WS  = 22;
-	const int BARRIER_END_EW   = 23;
-	const int BARRIER_END_NS   = 24;
-	const int BARRIER_END_SN   = 25;
-	const int BARRIER_END_WE   = 26;
+	const int ASSETS_START_INDEX = 50;
+	const int BG               = ASSETS_START_INDEX;
+	const int TRACK_H          = ASSETS_START_INDEX + 1;
+	const int TRACK_V          = ASSETS_START_INDEX + 2;
+	const int TRACK_TURN_EN    = ASSETS_START_INDEX + 3;
+	const int TRACK_TURN_ES    = ASSETS_START_INDEX + 4;
+	const int TRACK_TURN_WN    = ASSETS_START_INDEX + 5;
+	const int TRACK_TURN_WS    = ASSETS_START_INDEX + 6;
+	const int BARRIER_H        = ASSETS_START_INDEX + 7;
+	const int BARRIER_V        = ASSETS_START_INDEX + 8;
+	const int BARRIER_TURN_EN  = ASSETS_START_INDEX + 9;
+	const int BARRIER_TURN_ES  = ASSETS_START_INDEX + 10;
+	const int BARRIER_TURN_WN  = ASSETS_START_INDEX + 11;
+	const int BARRIER_TURN_WS  = ASSETS_START_INDEX + 12;
+	const int BARRIER_END_EW   = ASSETS_START_INDEX + 13;
+	const int BARRIER_END_NS   = ASSETS_START_INDEX + 14;
+	const int BARRIER_END_SN   = ASSETS_START_INDEX + 15;
+	const int BARRIER_END_WE   = ASSETS_START_INDEX + 16;
 
 	int track[20][20] =
 		{ {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
