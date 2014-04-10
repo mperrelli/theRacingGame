@@ -1,5 +1,6 @@
 #include "template.h"
 #include <string>
+#include "Globals.h"
 #include "Environment.h"
 #include "Track.h"
 #include "log.h"

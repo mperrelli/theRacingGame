@@ -11,6 +11,7 @@
 #include <string>
 using namespace AGK;
 using namespace std;
+#include "Globals.h"
 #include "Sprite.h"
 #include "Vehicle.h"
 #include "Environment.h"
@@ -72,14 +73,6 @@ const int TITLESCREEN  = 0,
 
 int	g_gameState		   = TITLESCREEN;
 
-/*****************************/
-/* GLOBAL CONSTANT VARIABLES */
-/*****************************/
-const int SCREEN_WIDTH  = 640,
-		  SCREEN_HEIGHT = 480,
-		  LOOP_TRUE  = 1,
-		  LOOP_FALSE = 0;
-
 
 // An array of tracks for easy use. This should be replaced
 // with a linked list later
@@ -119,7 +112,7 @@ void app::Begin( void )
 	agk::LoadImage(CONTROL,					"resources/control.png");
 
 	// Play Title Screen Music
-	agk::PlayMusic(TITLE_SCREEN_MUSIC, LOOP_TRUE);
+	agk::PlayMusic(TITLE_SCREEN_MUSIC, TRUE);
 
 	// Create sprites
 	userCar.setValues(CAR, CAR_INDEX);
@@ -352,26 +345,6 @@ void generateInstructions(){
 void loadMaps()
 {
 	// TEST: loading a test track in on the fly
-
-	// Constants for the image indecies
-	const int ASSETS_START_INDEX = 50;
-	const int BG               = ASSETS_START_INDEX;
-	const int TRACK_H          = ASSETS_START_INDEX + 1;
-	const int TRACK_V          = ASSETS_START_INDEX + 2;
-	const int TRACK_TURN_EN    = ASSETS_START_INDEX + 3;
-	const int TRACK_TURN_ES    = ASSETS_START_INDEX + 4;
-	const int TRACK_TURN_WN    = ASSETS_START_INDEX + 5;
-	const int TRACK_TURN_WS    = ASSETS_START_INDEX + 6;
-	const int BARRIER_H        = ASSETS_START_INDEX + 7;
-	const int BARRIER_V        = ASSETS_START_INDEX + 8;
-	const int BARRIER_TURN_EN  = ASSETS_START_INDEX + 9;
-	const int BARRIER_TURN_ES  = ASSETS_START_INDEX + 10;
-	const int BARRIER_TURN_WN  = ASSETS_START_INDEX + 11;
-	const int BARRIER_TURN_WS  = ASSETS_START_INDEX + 12;
-	const int BARRIER_END_EW   = ASSETS_START_INDEX + 13;
-	const int BARRIER_END_NS   = ASSETS_START_INDEX + 14;
-	const int BARRIER_END_SN   = ASSETS_START_INDEX + 15;
-	const int BARRIER_END_WE   = ASSETS_START_INDEX + 16;
 
 	int track[20][20] =
 		{ {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },

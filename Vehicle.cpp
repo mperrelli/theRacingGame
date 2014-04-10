@@ -1,5 +1,6 @@
 #include "template.h"
 #include <string>
+#include "Globals.h"
 #include "Vehicle.h"
 #include "template.h"
 #include <iostream>

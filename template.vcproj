@@ -202,6 +202,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Globals.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Log.h"
 				>
 			</File>
@@ -224,6 +228,10 @@
 		</Filter>
 		<File
 			RelativePath=".\Environment.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Globals.cpp"
 			>
 		</File>
 		<File

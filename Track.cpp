@@ -1,6 +1,6 @@
 #include "template.h"
 #include <string>
-#include <sstream>
+#include "Globals.h"
 #include "Track.h"
 #include "Log.h"
 using namespace std;
