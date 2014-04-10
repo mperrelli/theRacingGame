@@ -1,5 +1,6 @@
+#include "template.h"
+#include <string>
 #include "Vehicle.h"
-#include <iostream>
 
 using namespace std;
 
