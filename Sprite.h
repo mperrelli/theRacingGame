@@ -7,34 +7,34 @@ using namespace std;
 class Sprite
 {
 protected:
-   int spriteIndex;  // The sprite index
-   string imageFile; // The name of the image file
+	int spriteIndex;  // The sprite index
+	string imageFile; // The name of the image file
 
 public:
-   // Constructors
-   Sprite();
-   Sprite(int, string);
+	// Constructors
+	Sprite();
+	Sprite(int, string);
 
-   // Mutators
-   void createSprite();
-   void createSprite(int, int);
-   void createSprite(int, string);
-   void setImage(int);
-   void setPosition(float, float);
-   void setX(float);
-   void setY(float);
-   void setVisible(bool);
+	// Mutators
+	void createSprite();
+	void createSprite(int, int);
+	void createSprite(int, string);
+	void setImage(int);
+	void setPosition(float, float);
+	void setX(float);
+	void setY(float);
+	void setVisible(bool);
 
-   // Accessors
-   int getSpriteIndex() const;
-   string getImageFile() const;
-   float getX() const;
-   float getY() const;
-   float getWidth() const;
-   float getHeight()const;
-   float getCenterX() const;
-   float getCenterY() const;
+	// Accessors
+	int getSpriteIndex() const;
+	string getImageFile() const;
+	float getX() const;
+	float getY() const;
+	float getWidth() const;
+	float getHeight()const;
+	float getCenterX() const;
+	float getCenterY() const;
 
-   // Destructor
-   ~Sprite();
+	// Destructor
+	~Sprite();
 };
