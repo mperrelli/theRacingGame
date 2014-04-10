@@ -14,7 +14,7 @@ private:
 	static const int SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;
 
 	static const int TRACK_TILE_SIZE = 128;
-	static const int OBSTACLE_TILE_SIZE = 32;
+	static const int OBJECT_TILE_SIZE = 32;
 
 	static const int TRACK_ATLAST_START_INDEX = 50;
 
@@ -50,6 +50,8 @@ private:
 
 	int tileRows;
 	int tileCols;
+	int objectRows;
+	int objectCols;
 
 	void loadTiles();
 	void createSprites();

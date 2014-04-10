@@ -9,16 +9,26 @@ Track::Track()
 {
 	name = "none";
 	description = "none";
-	rows = TRACK_MAX_SIZE_ROWS;
-	cols = TRACK_MAX_SIZE_COLS;
+	trackRows = TRACK_MAX_SIZE_ROWS;
+	trackCols = TRACK_MAX_SIZE_COLS;
+	objectRows = OBJECT_MAX_SIZE_ROWS;
+	objectCols = OBJECT_MAX_SIZE_COLS;
 	startPosX = 50;
 	startPosY = 50;
 
-	for(int i = 0; i < rows; i++)
+	for(int i = 0; i < trackRows; i++)
 	{
-		for(int j = 0; j < cols; j++)
+		for(int j = 0; j < trackCols; j++)
 		{
 			trackAtlas[i][j] = 0;
+		}
+	}
+
+	for(int i = 0; i < objectRows; i++)
+	{
+		for(int j = 0; j < objectCols; j++)
+		{
+			objectAtlas[i][j] = 0;
 		}
 	}
 
@@ -27,6 +37,22 @@ Track::Track()
 	{
 		assets[i] = "";
 	}
+}
+
+Track::Track(string name, string desc, int rows, int cols, int startPosX, int startPosY,
+			 int track[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS],
+			 int objects[OBJECT_MAX_SIZE_ROWS][OBJECT_MAX_SIZE_COLS],
+			 string assets[MAX_ASSETS])
+{
+	setName(name);
+	setDescription(desc);
+	setStartPosX(startPosX);
+	setStartPosY(startPosY);
+	setRows(rows);
+	setCols(cols);
+	setAssets(assets);
+	setTrack(track);
+	setObjects(objects);
 }
 
 Track::~Track(void)
@@ -45,12 +71,12 @@ string Track::getDescription()
 
 int Track::getRows()
 {
-	return rows;
+	return trackRows;
 }
 
 int Track::getCols()
 {
-	return cols;
+	return trackCols;
 }
 
 void Track::setName(string n)
@@ -65,12 +91,14 @@ void Track::setDescription(string d)
 
 void Track::setRows(int r)
 {
-	rows = r;
+	trackRows = r;
+	objectRows = r * 4;
 }
 
 void Track::setCols(int c)
 {
-	cols = c;
+	trackCols = c;
+	objectCols = c * 4;
 }
 
 void Track::setStartPosX(int posX)
@@ -95,11 +123,22 @@ int Track::getStartPosY()
 
 void Track::setTrack(int track[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS])
 {
-	for(int i = 0; i < rows; i++)
+	for(int i = 0; i < trackRows; i++)
 	{
-		for(int j = 0; j < cols; j++)
+		for(int j = 0; j < trackCols; j++)
 		{
 			trackAtlas[i][j] = track[i][j];
+		}
+	}
+}
+
+void Track::setObjects(int objects[OBJECT_MAX_SIZE_ROWS][OBJECT_MAX_SIZE_COLS])
+{
+	for(int i = 0; i < objectRows; i++)
+	{
+		for(int j = 0; j < objectRows; j++)
+		{
+			objectAtlas[i][j] = objects[i][j];
 		}
 	}
 }

@@ -22,6 +22,8 @@ void Environment::processTrack()
 {
 	tileRows = map.getRows();
 	tileCols = map.getCols();
+	objectRows = tileRows * 4;
+	objectCols = tileCols * 4;
 
 	positionX = SCREEN_CENTER_X - map.getStartPosX();
 	positionY = SCREEN_CENTER_Y - map.getStartPosY();
@@ -87,7 +89,7 @@ void Environment::draw()
 	// Variable to temporarily hold a sprite index
 	int spriteIndex = TRACK_ATLAST_START_INDEX;
 
-	// Display all the tiles specified in the map.
+	// Update all the tiles specified in the map.
 	for (int r = 0; r < tileRows; r++)
 	{
 		// Set x to default X position.
@@ -109,6 +111,35 @@ void Environment::draw()
 		// Increase y for the next row.
 		y += TRACK_TILE_SIZE;
 	}
+
+	x = getPositionX();
+	y = getPositionY();
+
+	// Update all the objects specified in the map.
+	for (int r = 0; r < objectRows; r++)
+	{
+		// Set x to default X position.
+		x = getPositionX();
+
+		// Display all the tiles in this row.
+		for (int c = 0; c < objectCols; c++)
+		{
+			if(map.objectAtlas[r][c] != 0)
+			{
+				// Set the tile's position.
+				agk::SetSpritePosition(spriteIndex, x, y);
+
+				// Increment sprite Index
+				spriteIndex++;
+			}
+
+			// Update the X coordinate for the next tile.
+			x += OBJECT_TILE_SIZE;
+		}
+
+		// Increase y for the next row.
+		y += OBJECT_TILE_SIZE;
+	}
 }
 
 /*
@@ -123,8 +154,7 @@ void Environment::loadTiles()
 	for(int i = 0; i < map.MAX_ASSETS; i++)
 	{
 		temp = map.getPathToAsset(i);
-		const char * c = temp.c_str();
-		agk::LoadImage(ASSETS_START_INDEX + i, c);
+		agk::LoadImage(ASSETS_START_INDEX + i, temp.c_str());
 	}
 }
 
@@ -136,6 +166,7 @@ void Environment::createSprites()
 {
 	int spriteIndex = TRACK_ATLAST_START_INDEX;
 
+	// Create sprites for all track pieces
 	for (int r = 0; r < tileRows; r++)
 	{
 		// Display all the tiles in this row.
@@ -143,9 +174,28 @@ void Environment::createSprites()
 		{
 			// Create a sprite for this tile.
 			agk::CreateSprite(spriteIndex, map.trackAtlas[r][c]);
+			agk::SetSpriteDepth(spriteIndex, 1);
 
 			// Increment sprite Index
 			spriteIndex++;
+		}
+	}
+
+	// Create sprites for all objects
+	for (int r = 0; r < objectRows; r++)
+	{
+		// Display all the tiles in this row.
+		for (int c = 0; c < objectCols; c++)
+		{
+			// Create a sprite for this tile.
+			if(map.objectAtlas[r][c] > 0)
+			{
+				agk::CreateSprite(spriteIndex, map.objectAtlas[r][c]);
+				agk::SetSpriteDepth(spriteIndex, 0);
+
+				// Increment sprite Index
+				spriteIndex++;
+			}
 		}
 	}
 }

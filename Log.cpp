@@ -27,6 +27,5 @@ Log::Log()
 
 void Log::writeToLogFile(string line)
 {
-	const char * c = line.c_str();
-	agk::WriteLine(1, c);
+	agk::WriteLine(1, line.c_str());
 }
