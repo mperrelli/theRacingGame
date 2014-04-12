@@ -206,6 +206,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MapLoader.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sprite.h"
 				>
 			</File>
@@ -228,6 +232,10 @@
 		</File>
 		<File
 			RelativePath=".\Log.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\MapLoader.cpp"
 			>
 		</File>
 		<File

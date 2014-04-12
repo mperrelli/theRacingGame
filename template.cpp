@@ -15,6 +15,7 @@ using namespace std;
 #include "Vehicle.h"
 #include "Environment.h"
 #include "Track.h"
+#include "MapLoader.h"
 #include "log.h"
 app App;
 
@@ -148,6 +149,7 @@ void app::Loop ( void )
 		* environment
 		*/
 
+
 		break;
 	}
 
@@ -185,86 +187,21 @@ void generateInstructions(){
 // Load all maps from the resources folder
 void loadMaps()
 {
-	// TEST: loading a test track in on the fly
+	MapLoader loader;
+	int fIndex = agk::OpenToRead("maps.dat");
+	string line;
+	int counter = 0;
 
-	// Constants for the image indecies
-	const int BG               = 10;
-	const int TRACK_H          = 11;
-	const int TRACK_V          = 12;
-	const int TRACK_TURN_EN    = 13;
-	const int TRACK_TURN_ES    = 14;
-	const int TRACK_TURN_WN    = 15;
-	const int TRACK_TURN_WS    = 16;
-	const int BARRIER_H        = 17;
-	const int BARRIER_V        = 18;
-	const int BARRIER_TURN_EN  = 19;
-	const int BARRIER_TURN_ES  = 20;
-	const int BARRIER_TURN_WN  = 21;
-	const int BARRIER_TURN_WS  = 22;
-	const int BARRIER_END_EW   = 23;
-	const int BARRIER_END_NS   = 24;
-	const int BARRIER_END_SN   = 25;
-	const int BARRIER_END_WE   = 26;
-
-	int track[20][20] =
-		{ {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
-		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
-		  {TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H, TRACK_H},
-		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
-		  {BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   , BG   },
-		};
-
-	int objects[80][80] =
-	{ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H, BARRIER_H},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	};
-
-	string assets[17] =
+	while(!agk::FileEOF(fIndex))
 	{
-		"grass.png",
-		"trackV.png",
-		"trackH.png",
-		"trackTurnEN.png",
-		"trackTurnES.png",
-		"trackTurnWN.png",
-		"trackTurnWS.png",
-		"barrierH.png",
-		"barrierV.png",
-		"barrierTurnEN.png",
-		"barrierTurnES.png",
-		"barrierTurnWN.png",
-		"barrierTurnWS.png",
-		"barrierEndEW.png",
-		"barrierEndNS.png",
-		"barrierEndWE.png",
-		"barrierEndSN.png"
-	};
+		line = agk::ReadLine(fIndex);
 
-	tracks[0].setStartPosX(256);
-	tracks[0].setStartPosY(320);
-	tracks[0].setAssets(assets);
-	tracks[0].setTrack(track);
-	tracks[0].setObjects(objects);
-	tracks[0].setRows(5);
-	tracks[0].setCols(10);
-	tracks[0].setName("map1");
-	tracks[0].setDescription("This is a test description");
+		loader.loadFile(line.c_str());
+
+		tracks[counter] = loader.getTrack();
+
+		counter++;
+	}
+
+	agk::CloseFile(fIndex);
 }
