@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include "track.h"
+#include "Log.h"
 using namespace AGK;
 using namespace std;
 
