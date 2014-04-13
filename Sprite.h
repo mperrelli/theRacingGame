@@ -1,30 +1,40 @@
-#ifndef SPRITE_H
-#define SPRITE_H
-#include <iostream>
-
+#pragma once
+#include "template.h"
+#include <string>
+using namespace AGK;
 using namespace std;
 
-class Sprite{
-
-private:
-	int spriteIndex;
-	int imageIndex;
+class Sprite
+{
+protected:
+	int spriteIndex;  // The sprite index
+	string imageFile; // The name of the image file
 
 public:
+	// Constructors
 	Sprite();
-	Sprite(int index, int image);
-	void createSprite(int index, int image);
-	void setImage(int index);
-	void setX(float posX);
-	void setY(float posY);
-	int getSpriteIndex();
-	int getImageFile();
-	float getX();
-	float getY();
-	float getWidth();
-	float getHeight();
-	float getCenterX();
-	float getCenterY();
-};
+	Sprite(int, string);
 
-#endif
+	// Mutators
+	void createSprite();
+	void createSprite(int, int);
+	void createSprite(int, string);
+	void setImage(int);
+	void setPosition(float, float);
+	void setX(float);
+	void setY(float);
+	void setVisible(bool);
+
+	// Accessors
+	int getSpriteIndex() const;
+	string getImageFile() const;
+	float getX() const;
+	float getY() const;
+	float getWidth() const;
+	float getHeight()const;
+	float getCenterX() const;
+	float getCenterY() const;
+
+	// Destructor
+	~Sprite();
+};

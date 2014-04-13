@@ -1,14 +1,12 @@
 #pragma once
 #include "template.h"
 #include <string>
+#include "Globals.h"
 using namespace std;
 
 class Track
 {
 private:
-	static const int TRACK_BLOCK_SIZE = 128;
-	static const int OBJECT_BLOCK_SIZE = 32;
-
 	static const int TRACK_MAX_SIZE_ROWS = 20;
 	static const int TRACK_MAX_SIZE_COLS = 20;
 	static const int OBJECT_MAX_SIZE_COLS = 80;
