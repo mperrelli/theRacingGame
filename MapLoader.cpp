@@ -109,7 +109,7 @@ void MapLoader::processTrackRow(string row, int rowNum)
 
     while (ss >> temp)
 	{
-		track[rowNum][counter] = atoi(temp.c_str());
+		track[rowNum][counter] = applyAssetOffset(atoi(temp.c_str()));
 		counter++;
 	}
 }
@@ -124,7 +124,7 @@ void MapLoader::processObjectRow(string row, int rowNum)
 
     while (ss >> temp)
 	{
-		objects[rowNum][counter] = atoi(temp.c_str());
+		objects[rowNum][counter] = applyAssetOffset(atoi(temp.c_str()));
 		counter++;
 	}
 }
@@ -147,6 +147,11 @@ void MapLoader::storeData()
 Track MapLoader::getTrack()
 {
 	return map;
+}
+
+int MapLoader::applyAssetOffset(int num)
+{
+	return (num + ASSETS_START_INDEX) - ASSET_OFFSET;
 }
 
 MapLoader::~MapLoader(void)

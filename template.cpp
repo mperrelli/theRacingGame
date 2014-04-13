@@ -62,7 +62,8 @@ const int TITLESCREEN  = 0,
 		  PICKMAP	   = 2,
 		  PICKCARCOLOR = 3,
 		  PICKCARTYPE  = 4,
-		  INPLAY       = 5;
+		  LOADING      = 5,
+		  INPLAY       = 6;
 
 int	g_gameState		   = TITLESCREEN;
 
@@ -175,6 +176,16 @@ void app::Loop ( void )
 		chooseCarType();
 		break;
 
+	case LOADING:
+
+		agk::Print("Loading...");
+
+		env.setTrack(tracks[1]);
+
+		g_gameState = INPLAY;
+
+		break;
+
 	case INPLAY:
 	
 		/*
@@ -182,8 +193,6 @@ void app::Loop ( void )
 		* for input and updateing the screen IE updateing the
 		* environment
 		*/
-
-		env.setTrack(tracks[0]);
 
 		break;
 	}
@@ -281,7 +290,7 @@ void chooseCarType()
 		balance.~Sprite();
 		control.~Sprite();
 
-		g_gameState = INPLAY;
+		g_gameState = LOADING;
 	}
 }
 

@@ -6,6 +6,8 @@
 class MapLoader
 {
 private:
+	static const int ASSET_OFFSET = 10;
+
 	Track map;
 	string lines[1000];
 
@@ -19,6 +21,8 @@ private:
 	int cols;
 	int startPosX;
 	int startPosY;
+
+	int applyAssetOffset(int);
 
 public:
 	MapLoader();
