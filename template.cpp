@@ -178,8 +178,6 @@ void app::Loop ( void )
 
 	case LOADING:
 
-		agk::Print("Loading...");
-
 		env.setTrack(tracks[1]);
 
 		g_gameState = INPLAY;
@@ -187,7 +185,7 @@ void app::Loop ( void )
 		break;
 
 	case INPLAY:
-	
+
 		/*
 		* do somthing.. this will probably include checking
 		* for input and updateing the screen IE updateing the

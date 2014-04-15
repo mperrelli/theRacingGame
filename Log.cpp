@@ -1,6 +1,7 @@
 #include "template.h"
 #include "Log.h"
 #include <string>
+#include <sstream>
 using namespace AGK;
 using namespace std;
 
@@ -28,4 +29,22 @@ Log::Log()
 void Log::writeToLogFile(string line)
 {
 	agk::WriteLine(1, line.c_str());
+}
+
+void Log::writeToLogFile(int i)
+{
+	ostringstream ss;
+	ss << i;
+	string s(ss.str());
+
+	writeToLogFile(s);
+}
+
+void Log::writeToLogFile(float i)
+{
+	ostringstream ss;
+	ss << i;
+	string s(ss.str());
+
+	writeToLogFile(s);
 }

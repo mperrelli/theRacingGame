@@ -4,6 +4,7 @@
 /* GLOBAL IMAGE INDEXES      */
 /*****************************/
 const int ASSETS_START_INDEX = 50;
+const int ASSET_OFFSET       = 10;
 const int BG               = ASSETS_START_INDEX;
 const int TRACK_H          = ASSETS_START_INDEX + 1;
 const int TRACK_V          = ASSETS_START_INDEX + 2;

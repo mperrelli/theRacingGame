@@ -1,5 +1,6 @@
 #include "template.h"
 #include <string>
+#include <sstream>
 #include "Globals.h"
 #include "Environment.h"
 #include "Track.h"
@@ -88,7 +89,7 @@ void Environment::draw()
 	float x = getPositionX(), y = getPositionY();
 
 	// Variable to temporarily hold a sprite index
-	int spriteIndex = TRACK_ATLAST_START_INDEX;
+	int spriteIndex = TRACK_ATLAS_START_INDEX;
 
 	// Update all the tiles specified in the map.
 	for (int r = 0; r < tileRows; r++)
@@ -125,7 +126,7 @@ void Environment::draw()
 		// Display all the tiles in this row.
 		for (int c = 0; c < objectCols; c++)
 		{
-			if(map.objectAtlas[r][c] != 0)
+			if(map.objectAtlas[r][c] != (ASSETS_START_INDEX - ASSET_OFFSET))
 			{
 				// Set the tile's position.
 				agk::SetSpritePosition(spriteIndex, x, y);
@@ -165,7 +166,7 @@ void Environment::loadTiles()
 */
 void Environment::createSprites()
 {
-	int spriteIndex = TRACK_ATLAST_START_INDEX;
+	int spriteIndex = TRACK_ATLAS_START_INDEX;
 
 	// Create sprites for all track pieces
 	for (int r = 0; r < tileRows; r++)
@@ -189,7 +190,7 @@ void Environment::createSprites()
 		for (int c = 0; c < objectCols; c++)
 		{
 			// Create a sprite for this tile.
-			if(map.objectAtlas[r][c] > 0)
+			if(map.objectAtlas[r][c] > (ASSETS_START_INDEX - ASSET_OFFSET))
 			{
 				agk::CreateSprite(spriteIndex, map.objectAtlas[r][c]);
 				agk::SetSpriteDepth(spriteIndex, 0);

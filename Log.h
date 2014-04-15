@@ -8,6 +8,8 @@ class Log
 public:
 	static Log* Instance();
 	void writeToLogFile(string line);
+	void writeToLogFile(int i);
+	void writeToLogFile(float i);
 
 private:
 	Log();  // Private so that it can  not be called
