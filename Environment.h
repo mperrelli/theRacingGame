@@ -36,7 +36,7 @@ public:
 	~Environment(void);
 
 	void processTrack();
-	void updateEnvironment();
+	void updateEnvironment(float x, float y);
 	void setPositionX(float posX);
 	void setPositionY(float posY);
 	void draw();

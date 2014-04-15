@@ -53,9 +53,12 @@ void Environment::setTrack(Track t)
 *	directly to update the environment and everything that comprises the
 *	environment based on keyboard and mouse clicks
 */
-void Environment::updateEnvironment()
+void Environment::updateEnvironment(float x, float y)
 {
-	
+	positionX -= x * 10;
+	positionY -= y * 10;
+
+	draw();
 }
 
 void Environment::setPositionX(float posX)
@@ -126,7 +129,7 @@ void Environment::draw()
 		// Display all the tiles in this row.
 		for (int c = 0; c < objectCols; c++)
 		{
-			if(map.objectAtlas[r][c] != (ASSETS_START_INDEX - ASSET_OFFSET))
+			if(map.objectAtlas[r][c] > (ASSETS_START_INDEX - ASSET_OFFSET))
 			{
 				// Set the tile's position.
 				agk::SetSpritePosition(spriteIndex, x, y);

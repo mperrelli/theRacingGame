@@ -192,6 +192,13 @@ void app::Loop ( void )
 		* environment
 		*/
 
+		float x = 0, y = 0;
+
+		x = agk::GetDirectionX();
+		y = agk::GetDirectionY();
+
+		env.updateEnvironment(x, y);
+
 		break;
 	}
 
