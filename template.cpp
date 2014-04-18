@@ -202,16 +202,13 @@ void app::Loop ( void )
 		const int WEST = 180;
 		const int NORTH = 270;
 
-		const int TURNSPEED = 5;
-
 		float x = 0, y = 0;
 
 		x = agk::GetDirectionX();
 		y = agk::GetDirectionY();
 
-		int angle = ceil(userCar.getAngle());
-		
-		Log::Instance()->writeToLogFile(angle);
+		int turnspeed = userCar.getTurnSpeed();
+		int angle = (int)ceil(userCar.getAngle());
 
 		// keep angle within normal values
 		if(angle > 360)
@@ -227,12 +224,10 @@ void app::Loop ( void )
 			angle = 0;
 		}
 
-		Log::Instance()->writeToLogFile(angle);
-
 		// get acceleration and breaking from mouse
 		if(agk::GetRawMouseLeftState())
 		{
-			userCar.accelerate(x, y);
+			userCar.accelerate();
 		}
 		else if(!agk::GetRawMouseLeftState())
 		{
@@ -249,50 +244,46 @@ void app::Loop ( void )
 		{
 			if(angle == NORTH)
 			{
-				Log::Instance()->writeToLogFile("NORTH");
 				if(agk::GetRawKeyState(AGK_KEY_LEFT))
 				{
-					angle -= TURNSPEED;
+					angle -= turnspeed;
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_RIGHT))
 				{
-					angle += TURNSPEED;
+					angle += turnspeed;
 				}
 			}
 			else if(angle == EAST)
 			{
-				Log::Instance()->writeToLogFile("EAST");
 				if(agk::GetRawKeyState(AGK_KEY_UP))
 				{
-					angle -= TURNSPEED;
+					angle -= turnspeed;
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_DOWN))
 				{
-					angle += TURNSPEED;
+					angle += turnspeed;
 				}
 			}
 			else if(angle == SOUTH)
 			{
-				Log::Instance()->writeToLogFile("SOUTH");
 				if(agk::GetRawKeyState(AGK_KEY_LEFT))
 				{
-					angle += TURNSPEED;
+					angle += turnspeed;
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_RIGHT))
 				{
-					angle -= TURNSPEED;
+					angle -= turnspeed;
 				}
 			}
 			else if(angle == WEST)
 			{
-				Log::Instance()->writeToLogFile("WEST");
 				if(agk::GetRawKeyState(AGK_KEY_UP))
 				{
-					angle += TURNSPEED;
+					angle += turnspeed;
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_DOWN))
 				{
-					angle -= TURNSPEED;
+					angle -= turnspeed;
 				}
 			}
 			// Northeast Quandrent
@@ -304,11 +295,11 @@ void app::Loop ( void )
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_UP) || agk::GetRawKeyState(AGK_KEY_LEFT))
 				{
-					angle -= TURNSPEED;
+					angle -= turnspeed;
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_RIGHT) || agk::GetRawKeyState(AGK_KEY_DOWN))
 				{
-					angle += TURNSPEED;
+					angle += turnspeed;
 				}
 			}
 			// Southheast Quandrent
@@ -320,11 +311,11 @@ void app::Loop ( void )
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_RIGHT) || agk::GetRawKeyState(AGK_KEY_UP))
 				{
-					angle -= TURNSPEED;
+					angle -= turnspeed;
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_DOWN) || agk::GetRawKeyState(AGK_KEY_LEFT))
 				{
-					angle += TURNSPEED;
+					angle += turnspeed;
 				}
 			}	
 			// Southwest Quandrent
@@ -336,11 +327,11 @@ void app::Loop ( void )
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_DOWN) || agk::GetRawKeyState(AGK_KEY_RIGHT))
 				{
-					angle -= TURNSPEED;
+					angle -= turnspeed;
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_LEFT) || agk::GetRawKeyState(AGK_KEY_UP))
 				{
-					angle += TURNSPEED;
+					angle += turnspeed;
 				}
 			}
 			// Northwest Quandrent
@@ -352,11 +343,11 @@ void app::Loop ( void )
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_UP) || agk::GetRawKeyState(AGK_KEY_RIGHT))
 				{
-					angle += TURNSPEED;
+					angle += turnspeed;
 				}
 				else if(agk::GetRawKeyState(AGK_KEY_LEFT) || agk::GetRawKeyState(AGK_KEY_DOWN))
 				{
-					angle -= TURNSPEED;
+					angle -= turnspeed;
 				}
 			}
 		}
@@ -444,18 +435,19 @@ void chooseCarType()
 			case SPEED_INDEX:
 				
 				userCar.setMaxSpeed(12);
+				userCar.setControlFactor(0);
 
 				break;
 			case BALANCE_INDEX:
 
-				// Do something with Vehicle userCar's attributes
-				userCar.setMaxSpeed(10);
+				userCar.setMaxSpeed(11);
+				userCar.setControlFactor(1);
 
 				break;
 			case CONTROL_INDEX:
 
-				// Do something with Vehicle userCar's attributes
 				userCar.setMaxSpeed(10);
+				userCar.setControlFactor(2);
 
 				break;
 			default:
@@ -521,7 +513,7 @@ void createSpritesForMenus()
 	green.setX(SCREEN_WIDTH / 2 - green.getCenterX());
 	green.setY(SCREEN_HEIGHT / 2 - green.getCenterY());
 	blue.setX(SCREEN_WIDTH / 2 - blue.getCenterX());
-	blue.setY(SCREEN_HEIGHT / 1.3 - blue.getCenterY());
+	blue.setY(SCREEN_HEIGHT / 1.3f - blue.getCenterY());
 
 	carScreen.setVisible(FALSE);
 	red.setVisible(FALSE);

@@ -12,7 +12,7 @@ Vehicle::Vehicle() : Sprite()
 {
     health = 100;
     maxSpeed = 100;
-    controlFactor = 1;
+    controlFactor = 0;
     active = false;
 	currSpeed = 0.0f;
 	velocityX = 0.0f;
@@ -27,7 +27,6 @@ Vehicle::Vehicle(int sIndex, string image, int maxSpeed, int controlFactor) : Sp
     controlFactor = controlFactor;
     active = false;
 	currSpeed = 0.0f;
-	velocityY = 0.0f;
 
 	setIntervals();
 }
@@ -44,7 +43,7 @@ void Vehicle::setAngle(int a)
 	agk::SetSpriteAngle(spriteIndex, (float)a);
 }
 
-void Vehicle::accelerate(int x, int y)
+void Vehicle::accelerate()
 {
 	if(currSpeed < maxSpeed)
 	{
@@ -74,6 +73,15 @@ void Vehicle::applyBreak()
 	{
 		currSpeed = 0;
 	}
+}
+
+int Vehicle::getTurnSpeed()
+{
+	int turnspeed[12] = {6, 6, 6, 6, 6, 5, 5, 5, 4, 4, 3, 2};
+
+	Log::Instance()->writeToLogFile((int)floor(currSpeed));
+
+	return turnspeed[(int)floor(currSpeed) - 1] + controlFactor;
 }
 
 float Vehicle::getAngle()

@@ -35,9 +35,10 @@ public:
 	void setHealth(int health);
 	void setMaxSpeed(int maxSpeed);
 	void setAngle(int);
-	void accelerate(int, int);
+	void accelerate();
 	void deccelerate();
 	void applyBreak();
+	int getTurnSpeed();
 };
 
 #endif
