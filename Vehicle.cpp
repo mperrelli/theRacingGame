@@ -15,6 +15,7 @@ Vehicle::Vehicle() : Sprite()
     controlFactor = 1;
     active = false;
 	currSpeed = 0.0f;
+	velocityX = 0.0f;
 
 	setIntervals();
 }
@@ -26,6 +27,7 @@ Vehicle::Vehicle(int sIndex, string image, int maxSpeed, int controlFactor) : Sp
     controlFactor = controlFactor;
     active = false;
 	currSpeed = 0.0f;
+	velocityY = 0.0f;
 
 	setIntervals();
 }
@@ -37,12 +39,12 @@ void Vehicle::setIntervals()
 	breakInterval = -0.1f;
 }
 
-void Vehicle::setAngle(float a)
+void Vehicle::setAngle(int a)
 {
-	agk::SetSpriteAngle(spriteIndex, a);
+	agk::SetSpriteAngle(spriteIndex, (float)a);
 }
 
-void Vehicle::accelerate()
+void Vehicle::accelerate(int x, int y)
 {
 	if(currSpeed < maxSpeed)
 	{

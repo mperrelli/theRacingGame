@@ -15,6 +15,8 @@ private:
 	bool active;
 
 	float currSpeed;
+	float velocityX;
+	float velocityY;
 
 	void setIntervals();
 
@@ -32,8 +34,8 @@ public:
 	void setControlFactor(int controlFactor);
 	void setHealth(int health);
 	void setMaxSpeed(int maxSpeed);
-	void setAngle(float);
-	void accelerate();
+	void setAngle(int);
+	void accelerate(int, int);
 	void deccelerate();
 	void applyBreak();
 };
