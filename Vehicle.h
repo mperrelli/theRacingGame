@@ -7,8 +7,16 @@
 class Vehicle : public Sprite{
 
 private:
+	float accelInterval;
+	float deccelInterval;
+	float breakInterval;
+
 	int health, maxSpeed, controlFactor;
 	bool active;
+
+	float currSpeed;
+
+	void setIntervals();
 
 public:
 	Vehicle();
@@ -16,12 +24,18 @@ public:
 	int getControlFactor();
 	int getHealth();
 	int getMaxSpeed();
+	float getAngle();
+	float getCurrSpeed();
 	bool isActive();
 	void setActive(bool active);
 	void setColor(char color);
 	void setControlFactor(int controlFactor);
 	void setHealth(int health);
 	void setMaxSpeed(int maxSpeed);
+	void setAngle(float);
+	void accelerate();
+	void deccelerate();
+	void applyBreak();
 };
 
 #endif

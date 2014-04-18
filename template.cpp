@@ -36,7 +36,7 @@ void createSpritesForMenus();
 /* IMAGE/SPRITE ATTRIBUTES */
 /***************************/
 // Image indexes
-const int CAR					  = 2;
+const int CAR = 2;
 
 // Sprite indexes
 const int TITLE_SCREEN_BG_INDEX			= 1;
@@ -105,13 +105,15 @@ void app::Begin( void )
 	agk::LoadMusic(TITLE_SCREEN_MUSIC,		"resources/title_screen_music.mp3");
 
 	// Load Images
-	agk::LoadImage(CAR,					    "resources/car.gif");
+	agk::LoadImage(CAR,					    "resources/car.png");
 
 	// Play Title Screen Music
 	agk::PlayMusic(TITLE_SCREEN_MUSIC, TRUE);
 
 	// Create sprites
 	userCar.createSprite(CAR_INDEX, CAR);
+	userCar.setPosition(SCREEN_WIDTH / 2 - userCar.getHeight() / 2, SCREEN_HEIGHT / 2 - userCar.getWidth() / 2);
+	agk::SetSpriteDepth(CAR_INDEX, -1);
 
 	// Set sprite initial visibilities
 	userCar.setVisible(FALSE);
@@ -178,7 +180,10 @@ void app::Loop ( void )
 
 	case LOADING:
 
+		agk::StopMusic();
 		env.setTrack(tracks[1]);
+		userCar.setVisible(TRUE);
+		userCar.setAngle(270);
 
 		g_gameState = INPLAY;
 
@@ -197,7 +202,57 @@ void app::Loop ( void )
 		x = agk::GetDirectionX();
 		y = agk::GetDirectionY();
 
-		env.updateEnvironment(x, y);
+		if(agk::GetRawMouseLeftState())
+		{
+			userCar.accelerate();
+		}
+		else if(!agk::GetRawMouseLeftState())
+		{
+			userCar.deccelerate();
+		}
+
+		if(agk::GetRawMouseRightState())
+		{
+			userCar.applyBreak();
+		}
+
+		if(userCar.getCurrSpeed() > 0)
+		{
+			if(x > 0 && y > 0)
+			{
+				userCar.setAngle(315);
+			}
+			else if(x > 0 && y < 0)
+			{
+				userCar.setAngle(225);
+			}
+			else if(x < 0 && y > 0)
+			{
+				userCar.setAngle(45);
+			}
+			else if(x < 0 && y < 0)
+			{
+				userCar.setAngle(135);
+			}
+			else if(x < 0)
+			{
+				userCar.setAngle(90);
+			}
+			else if(x > 0)
+			{
+				userCar.setAngle(270);
+			}
+			else if(y < 0)
+			{
+				userCar.setAngle(180);
+			}
+			else if(y > 0)
+			{
+				userCar.setAngle(0);
+			}
+		}
+
+		env.updateEnvironment(x, y, userCar.getCurrSpeed());
 
 		break;
 	}
@@ -277,13 +332,21 @@ void chooseCarType()
 		switch(agk::GetSpriteHit(mouseX, mouseY))
 		{
 			case SPEED_INDEX:
-				// Do something with Vehicle userCar's attributes
+				
+				userCar.setMaxSpeed(12);
+
 				break;
 			case BALANCE_INDEX:
+
 				// Do something with Vehicle userCar's attributes
+				userCar.setMaxSpeed(10);
+
 				break;
 			case CONTROL_INDEX:
+
 				// Do something with Vehicle userCar's attributes
+				userCar.setMaxSpeed(10);
+
 				break;
 			default:
 				break;

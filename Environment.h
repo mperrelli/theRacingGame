@@ -3,6 +3,7 @@
 #include <string>
 #include "Globals.h"
 #include "track.h"
+#include "Vehicle.h"
 using namespace std;
 
 class Environment
@@ -36,7 +37,7 @@ public:
 	~Environment(void);
 
 	void processTrack();
-	void updateEnvironment(float x, float y);
+	void updateEnvironment(float x, float y, float);
 	void setPositionX(float posX);
 	void setPositionY(float posY);
 	void draw();

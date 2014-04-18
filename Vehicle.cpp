@@ -2,9 +2,8 @@
 #include <string>
 #include "Globals.h"
 #include "Vehicle.h"
-#include "template.h"
+#include "Log.h"
 #include <iostream>
-
 using namespace std;
 using namespace AGK;
 
@@ -15,6 +14,9 @@ Vehicle::Vehicle() : Sprite()
     maxSpeed = 100;
     controlFactor = 1;
     active = false;
+	currSpeed = 0.0f;
+
+	setIntervals();
 }
 
 Vehicle::Vehicle(int sIndex, string image, int maxSpeed, int controlFactor) : Sprite(sIndex, image)
@@ -23,6 +25,58 @@ Vehicle::Vehicle(int sIndex, string image, int maxSpeed, int controlFactor) : Sp
     maxSpeed = maxSpeed;
     controlFactor = controlFactor;
     active = false;
+	currSpeed = 0.0f;
+
+	setIntervals();
+}
+
+void Vehicle::setIntervals()
+{
+	accelInterval = 0.1f;
+	deccelInterval = -0.05f;
+	breakInterval = -0.1f;
+}
+
+void Vehicle::setAngle(float a)
+{
+	agk::SetSpriteAngle(spriteIndex, a);
+}
+
+void Vehicle::accelerate()
+{
+	if(currSpeed < maxSpeed)
+	{
+		currSpeed += accelInterval;
+	}
+}
+
+void Vehicle::deccelerate()
+{
+	if(currSpeed > 0)
+	{
+		currSpeed += deccelInterval;
+	}
+	else if(currSpeed <= 0)
+	{
+		currSpeed = 0;
+	}
+}
+
+void Vehicle::applyBreak()
+{
+	if(currSpeed > 0)
+	{
+		currSpeed += breakInterval;
+	}
+	else if(currSpeed <= 0)
+	{
+		currSpeed = 0;
+	}
+}
+
+float Vehicle::getAngle()
+{
+	return agk::GetSpriteAngle(spriteIndex);
 }
 
 int Vehicle::getControlFactor()
@@ -39,6 +93,11 @@ int Vehicle::getMaxSpeed()
 {
 	return maxSpeed;
 }
+
+float Vehicle::getCurrSpeed()
+{
+	return currSpeed;
+}	
 
 void Vehicle::setActive(bool a)
 {

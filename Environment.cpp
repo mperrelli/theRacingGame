@@ -5,6 +5,7 @@
 #include "Environment.h"
 #include "Track.h"
 #include "log.h"
+#include "Vehicle.h"
 using namespace AGK;
 using namespace std;
 
@@ -53,10 +54,10 @@ void Environment::setTrack(Track t)
 *	directly to update the environment and everything that comprises the
 *	environment based on keyboard and mouse clicks
 */
-void Environment::updateEnvironment(float x, float y)
+void Environment::updateEnvironment(float x, float y, float speed)
 {
-	positionX -= x * 10;
-	positionY -= y * 10;
+	positionX -= x * speed;
+	positionY -= y * speed;
 
 	draw();
 }
