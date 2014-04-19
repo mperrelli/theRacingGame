@@ -11,7 +11,7 @@ using namespace AGK;
 Vehicle::Vehicle() : Sprite()
 {
     health = 100;
-    maxSpeed = 100;
+    maxSpeed = 0;
     controlFactor = 0;
     active = false;
 	currSpeed = 0.0f;

@@ -30,6 +30,7 @@ void chooseCarColor();
 void loadMaps();
 void chooseCarType();
 void createSpritesForMenus();
+void updateVehicle();
 
 
 /***************************/
@@ -124,19 +125,6 @@ void app::Begin( void )
 // Main loop, called every frame
 void app::Loop ( void )
 {
-
-	/* 
-	* Every iteration of the main loop we need to check for user input
-	* We check the keyboard, cursor position, and mouse clicks.
-	*
-	* The following functions will need to be implemented
-	*
-	* updateCursor();
-	* checkMouseInput();
-	* checkKeyboardInput();
-	*
-	*/
-
 	switch(g_gameState)
 	{
 	case TITLESCREEN:
@@ -196,164 +184,7 @@ void app::Loop ( void )
 		* environment
 		*/
 
-		const int EAST = 0;
-		const int EASTHIGH = 360;
-		const int SOUTH = 90;
-		const int WEST = 180;
-		const int NORTH = 270;
-
-		float x = 0, y = 0;
-
-		x = agk::GetDirectionX();
-		y = agk::GetDirectionY();
-
-		int turnspeed = userCar.getTurnSpeed();
-		int angle = (int)ceil(userCar.getAngle());
-
-		// keep angle within normal values
-		if(angle > 360)
-		{
-			angle = angle - 360;
-		}
-		else if(angle < 0)
-		{
-			angle = angle + 360;
-		}
-		else if(angle == 360)
-		{
-			angle = 0;
-		}
-
-		// get acceleration and breaking from mouse
-		if(agk::GetRawMouseLeftState())
-		{
-			userCar.accelerate();
-		}
-		else if(!agk::GetRawMouseLeftState())
-		{
-			userCar.deccelerate();
-		}
-
-		if(agk::GetRawMouseRightState())
-		{
-			userCar.applyBreak();
-		}
-
-		// Manage car animation during turns
-		if(userCar.getCurrSpeed() > 0)
-		{
-			if(angle == NORTH)
-			{
-				if(agk::GetRawKeyState(AGK_KEY_LEFT))
-				{
-					angle -= turnspeed;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_RIGHT))
-				{
-					angle += turnspeed;
-				}
-			}
-			else if(angle == EAST)
-			{
-				if(agk::GetRawKeyState(AGK_KEY_UP))
-				{
-					angle -= turnspeed;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_DOWN))
-				{
-					angle += turnspeed;
-				}
-			}
-			else if(angle == SOUTH)
-			{
-				if(agk::GetRawKeyState(AGK_KEY_LEFT))
-				{
-					angle += turnspeed;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_RIGHT))
-				{
-					angle -= turnspeed;
-				}
-			}
-			else if(angle == WEST)
-			{
-				if(agk::GetRawKeyState(AGK_KEY_UP))
-				{
-					angle += turnspeed;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_DOWN))
-				{
-					angle -= turnspeed;
-				}
-			}
-			// Northeast Quandrent
-			else if(angle > NORTH && angle < EASTHIGH) 
-			{
-				if(agk::GetRawKeyState(AGK_KEY_UP) && agk::GetRawKeyState(AGK_KEY_RIGHT))
-				{
-					angle = angle;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_UP) || agk::GetRawKeyState(AGK_KEY_LEFT))
-				{
-					angle -= turnspeed;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_RIGHT) || agk::GetRawKeyState(AGK_KEY_DOWN))
-				{
-					angle += turnspeed;
-				}
-			}
-			// Southheast Quandrent
-			else if(angle > EAST && angle < SOUTH)
-			{
-				if(agk::GetRawKeyState(AGK_KEY_RIGHT) && agk::GetRawKeyState(AGK_KEY_DOWN))
-				{
-					angle = angle;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_RIGHT) || agk::GetRawKeyState(AGK_KEY_UP))
-				{
-					angle -= turnspeed;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_DOWN) || agk::GetRawKeyState(AGK_KEY_LEFT))
-				{
-					angle += turnspeed;
-				}
-			}	
-			// Southwest Quandrent
-			else if(angle > SOUTH && angle < WEST)
-			{
-				if(agk::GetRawKeyState(AGK_KEY_LEFT) && agk::GetRawKeyState(AGK_KEY_DOWN))
-				{
-					angle = angle;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_DOWN) || agk::GetRawKeyState(AGK_KEY_RIGHT))
-				{
-					angle -= turnspeed;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_LEFT) || agk::GetRawKeyState(AGK_KEY_UP))
-				{
-					angle += turnspeed;
-				}
-			}
-			// Northwest Quandrent
-			else if(angle > WEST && angle < NORTH)
-			{
-				if(agk::GetRawKeyState(AGK_KEY_UP) && agk::GetRawKeyState(AGK_KEY_LEFT))
-				{
-					angle = angle;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_UP) || agk::GetRawKeyState(AGK_KEY_RIGHT))
-				{
-					angle += turnspeed;
-				}
-				else if(agk::GetRawKeyState(AGK_KEY_LEFT) || agk::GetRawKeyState(AGK_KEY_DOWN))
-				{
-					angle -= turnspeed;
-				}
-			}
-		}
-
-		userCar.setAngle(angle);
-		env.updateEnvironment(x, y, userCar.getCurrSpeed());
+		updateVehicle();
 
 		break;
 	}
@@ -540,4 +371,166 @@ void createSpritesForMenus()
 	speed.setVisible(FALSE);
 	control.setVisible(FALSE);
 	balance.setVisible(FALSE);
+}
+
+void updateVehicle()
+{
+	const int EAST = 0;
+	const int EASTHIGH = 360;
+	const int SOUTH = 90;
+	const int WEST = 180;
+	const int NORTH = 270;
+
+	float x = 0, y = 0;
+
+	x = agk::GetDirectionX();
+	y = agk::GetDirectionY();
+
+	int turnspeed = userCar.getTurnSpeed();
+	int angle = (int)ceil(userCar.getAngle());
+
+	// keep angle within normal values
+	if(angle > 360)
+	{
+		angle = angle - 360;
+	}
+	else if(angle < 0)
+	{
+		angle = angle + 360;
+	}
+	else if(angle == 360)
+	{
+		angle = 0;
+	}
+
+	// get acceleration and breaking from mouse
+	if(agk::GetRawMouseLeftState())
+	{
+		userCar.accelerate();
+	}
+	else if(!agk::GetRawMouseLeftState())
+	{
+		userCar.deccelerate();
+	}
+
+	if(agk::GetRawMouseRightState())
+	{
+		userCar.applyBreak();
+	}
+
+	// Manage car animation during turns
+	if(userCar.getCurrSpeed() > 0)
+	{
+		if(angle == NORTH)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle += turnspeed;
+			}
+		}
+		else if(angle == EAST)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_UP))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle += turnspeed;
+			}
+		}
+		else if(angle == SOUTH)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle += turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle -= turnspeed;
+			}
+		}
+		else if(angle == WEST)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_UP))
+			{
+				angle += turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle -= turnspeed;
+			}
+		}
+		// Northeast Quandrent
+		else if(angle > NORTH && angle < EASTHIGH) 
+		{
+			if(agk::GetRawKeyState(AGK_KEY_UP) && agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle = angle;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_UP) || agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_RIGHT) || agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle += turnspeed;
+			}
+		}
+		// Southheast Quandrent
+		else if(angle > EAST && angle < SOUTH)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_RIGHT) && agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle = angle;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_RIGHT) || agk::GetRawKeyState(AGK_KEY_UP))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_DOWN) || agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle += turnspeed;
+			}
+		}	
+		// Southwest Quandrent
+		else if(angle > SOUTH && angle < WEST)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_LEFT) && agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle = angle;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_DOWN) || agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_LEFT) || agk::GetRawKeyState(AGK_KEY_UP))
+			{
+				angle += turnspeed;
+			}
+		}
+		// Northwest Quandrent
+		else if(angle > WEST && angle < NORTH)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_UP) && agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle = angle;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_UP) || agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle += turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_LEFT) || agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle -= turnspeed;
+			}
+		}
+	}
+
+	userCar.setAngle(angle);
+	env.updateEnvironment(x, y, userCar.getCurrSpeed());
 }
