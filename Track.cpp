@@ -1,6 +1,5 @@
 #include "template.h"
 #include <string>
-#include "Globals.h"
 #include "Track.h"
 #include "Log.h"
 using namespace std;

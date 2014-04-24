@@ -1,7 +1,8 @@
 #pragma once
 #include "template.h"
 #include <string>
-#include "track.h"
+#include "Track.h"
+#include "Globals.h"
 
 class MapLoader
 {

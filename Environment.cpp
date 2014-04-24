@@ -1,11 +1,11 @@
 #include "template.h"
 #include <string>
 #include <sstream>
-#include "Globals.h"
 #include "Environment.h"
 #include "Track.h"
 #include "log.h"
 #include "Vehicle.h"
+#include "Globals.h"
 using namespace AGK;
 using namespace std;
 
@@ -181,6 +181,7 @@ void Environment::createSprites()
 			// Create a sprite for this tile.
 			agk::CreateSprite(spriteIndex, map.trackAtlas[r][c]);
 			agk::SetSpriteDepth(spriteIndex, 1);
+			agk::SetSpriteGroup(spriteIndex, 1);
 
 			// Increment sprite Index
 			spriteIndex++;
@@ -198,10 +199,13 @@ void Environment::createSprites()
 			{
 				agk::CreateSprite(spriteIndex, map.objectAtlas[r][c]);
 				agk::SetSpriteDepth(spriteIndex, 0);
+				agk::SetSpriteGroup(spriteIndex, 1);
 
 				// Increment sprite Index
 				spriteIndex++;
 			}
 		}
 	}
+
+	spriteIndex = g_assetsEndIndex;
 }

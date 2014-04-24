@@ -1,6 +1,5 @@
 #include "template.h"
 #include <string>
-#include "Globals.h"
 #include "Vehicle.h"
 #include "Log.h"
 #include <iostream>
@@ -16,6 +15,7 @@ Vehicle::Vehicle() : Sprite()
     active = false;
 	currSpeed = 0.0f;
 	velocityX = 0.0f;
+	surface = TRACK_V;
 
 	setIntervals();
 }
@@ -27,6 +27,7 @@ Vehicle::Vehicle(int sIndex, string image, int maxSpeed, int controlFactor) : Sp
     controlFactor = controlFactor;
     active = false;
 	currSpeed = 0.0f;
+	surface = TRACK_V;
 
 	setIntervals();
 }
@@ -43,14 +44,16 @@ void Vehicle::setAngle(int a)
 	agk::SetSpriteAngle(spriteIndex, (float)a);
 }
 
+// Increases vehicle acceleration by the acceleration interval
 void Vehicle::accelerate()
 {
-	if(currSpeed < maxSpeed)
+	if(currSpeed < getMaxSpeed())
 	{
 		currSpeed += accelInterval;
 	}
 }
 
+// Decreases vehicle acceleration by the decceleration interval
 void Vehicle::deccelerate()
 {
 	if(currSpeed > 0)
@@ -63,6 +66,7 @@ void Vehicle::deccelerate()
 	}
 }
 
+// Decreases vehicle acceleration by the break interval
 void Vehicle::applyBreak()
 {
 	if(currSpeed > 0)
@@ -75,11 +79,10 @@ void Vehicle::applyBreak()
 	}
 }
 
+// returns how easily the car should turn based on speed
 int Vehicle::getTurnSpeed()
 {
 	int turnspeed[12] = {6, 6, 6, 6, 6, 5, 5, 5, 4, 4, 3, 2};
-
-	Log::Instance()->writeToLogFile((int)floor(currSpeed));
 
 	return turnspeed[(int)floor(currSpeed) - 1] + controlFactor;
 }
@@ -101,6 +104,11 @@ int Vehicle::getHealth()
 
 int Vehicle::getMaxSpeed()
 {
+	if(surface == BG)
+	{
+		return maxSpeed - 9;
+	}
+
 	return maxSpeed;
 }
 
@@ -150,4 +158,39 @@ void Vehicle::setMaxSpeed(int ms)
 bool Vehicle::isActive()
 {
 	return active;
+}
+
+void Vehicle::update()
+{
+	int sIndex = -1;
+
+	sIndex = agk::GetSpriteHitGroup(1 ,getCenterX(), getCenterY());
+
+	surface = agk::GetSpriteImageID(sIndex);
+
+	switch(surface)
+	{
+	case BG:
+
+		if(currSpeed > getMaxSpeed())
+		{
+			deccelerate();
+			deccelerate();
+			deccelerate();
+		}
+
+		break;
+
+	case BARRIER_H || BARRIER_V || BARRIER_TURN_EN || 
+		 BARRIER_TURN_ES || BARRIER_TURN_WN || BARRIER_TURN_WS || 
+		 BARRIER_END_EW || BARRIER_END_NS || BARRIER_END_SN || BARRIER_END_WE:
+
+		currSpeed = 0;
+
+		break;
+
+	default:;
+
+	}
+	
 }

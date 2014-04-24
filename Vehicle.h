@@ -3,6 +3,7 @@
 #include "template.h"
 #include <string>
 #include "Sprite.h"
+#include "Globals.h"
 
 class Vehicle : public Sprite{
 
@@ -13,6 +14,8 @@ private:
 
 	int health, maxSpeed, controlFactor;
 	bool active;
+
+	int surface;
 
 	float currSpeed;
 	float velocityX;
@@ -39,6 +42,7 @@ public:
 	void deccelerate();
 	void applyBreak();
 	int getTurnSpeed();
+	void update();
 };
 
 #endif

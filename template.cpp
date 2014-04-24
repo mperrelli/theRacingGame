@@ -11,13 +11,13 @@
 #include <string>
 using namespace AGK;
 using namespace std;
-#include "Globals.h"
 #include "Sprite.h"
 #include "Vehicle.h"
 #include "Environment.h"
 #include "Track.h"
 #include "MapLoader.h"
 #include "log.h"
+#include "Globals.h"
 app App;
 
 /***********************/
@@ -531,6 +531,7 @@ void updateVehicle()
 		}
 	}
 
+	userCar.update();
 	userCar.setAngle(angle);
 	env.updateEnvironment(x, y, userCar.getCurrSpeed());
 }
