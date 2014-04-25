@@ -235,10 +235,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\Globals.cpp"
-			>
-		</File>
-		<File
 			RelativePath=".\Log.cpp"
 			>
 		</File>

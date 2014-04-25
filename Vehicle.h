@@ -18,8 +18,6 @@ private:
 	int surface;
 
 	float currSpeed;
-	float velocityX;
-	float velocityY;
 
 	void setIntervals();
 

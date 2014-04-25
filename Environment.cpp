@@ -181,7 +181,7 @@ void Environment::createSprites()
 			// Create a sprite for this tile.
 			agk::CreateSprite(spriteIndex, map.trackAtlas[r][c]);
 			agk::SetSpriteDepth(spriteIndex, 1);
-			agk::SetSpriteGroup(spriteIndex, 1);
+			agk::SetSpriteGroup(spriteIndex, SPRITE_GROUP_TRACK);
 
 			// Increment sprite Index
 			spriteIndex++;
@@ -199,7 +199,7 @@ void Environment::createSprites()
 			{
 				agk::CreateSprite(spriteIndex, map.objectAtlas[r][c]);
 				agk::SetSpriteDepth(spriteIndex, 0);
-				agk::SetSpriteGroup(spriteIndex, 1);
+				agk::SetSpriteGroup(spriteIndex, SPRITE_GROUP_TRACK);
 
 				// Increment sprite Index
 				spriteIndex++;

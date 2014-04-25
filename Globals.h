@@ -24,6 +24,9 @@ const int BARRIER_END_WE   = ASSETS_START_INDEX + 16;
 
 const int TRACK_ATLAS_START_INDEX = 200;
 
+const int CAR = 2;
+const int CAR_MOVING = 3;
+
 /*****************************/
 /* SCREEN DATA               */
 /*****************************/
@@ -38,3 +41,15 @@ const int SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;
 const int TRACK_TILE_SIZE = 128;
 const int OBJECT_TILE_SIZE = 32;
 
+/*****************************/
+/* Sprite Groups             */
+/*****************************/
+const int SPRITE_GROUP_TRACK     = 1;
+const int SPRITE_GROUP_SELECTION = 2;
+
+/*****************************/
+/* Vehicle Data              */
+/*****************************/
+const int VEHICLE_FRAME_HEIGHT = 29;
+const int VEHICLE_FRAME_WIDTH  = 70;
+const int VEHICLE_FRAMES       = 8;

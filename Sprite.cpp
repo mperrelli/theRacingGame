@@ -90,6 +90,11 @@ void Sprite::setVisible(bool value)
 	agk::SetSpriteVisible(spriteIndex, value);
 }
 
+void Sprite::setSpriteGroup(int group)
+{
+	agk::SetSpriteGroup(spriteIndex, group);
+}
+
 // The Sprite::getSpriteIndex member function
 // returns the sprite's index.
 int Sprite::getSpriteIndex() const

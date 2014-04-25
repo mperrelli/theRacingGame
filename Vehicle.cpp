@@ -14,7 +14,6 @@ Vehicle::Vehicle() : Sprite()
     controlFactor = 0;
     active = false;
 	currSpeed = 0.0f;
-	velocityX = 0.0f;
 	surface = TRACK_V;
 
 	setIntervals();
@@ -130,13 +129,13 @@ void Vehicle::setColor(char color)
 	switch(color)
 	{
 		case 'R': 
-			agk::SetSpriteColor(spriteIndex, 255, 0, 0, 255);
+			agk::SetSpriteColor(getSpriteIndex(), 255, 0, 0, 255);
 			break;
 		case 'G':
-			agk::SetSpriteColor(spriteIndex, 50, 205, 50, 255);
+			agk::SetSpriteColor(getSpriteIndex(), 0, 255, 0, 255);
 			break;
 		default:
-			agk::SetSpriteColor(spriteIndex, 0, 199, 255, 255);
+			agk::SetSpriteColor(getSpriteIndex(), 0, 0, 255, 255);
 	}
 }
 
@@ -164,33 +163,45 @@ void Vehicle::update()
 {
 	int sIndex = -1;
 
+	// Set exhaust animation
+	if(getCurrSpeed() > 4)
+	{
+		if(agk::GetSpriteImageID(getSpriteIndex()) != CAR_MOVING)
+		{
+			setImage(CAR_MOVING);
+		}
+	}
+	else if(agk::GetSpriteImageID(getSpriteIndex()) != CAR)
+	{
+		setImage(CAR);
+	}
+
+	// Get surface
 	sIndex = agk::GetSpriteHitGroup(1 ,getCenterX(), getCenterY());
 
 	surface = agk::GetSpriteImageID(sIndex);
 
-	switch(surface)
+	// Respond to surface
+	if(surface == BG)
 	{
-	case BG:
-
 		if(currSpeed > getMaxSpeed())
 		{
 			deccelerate();
 			deccelerate();
 			deccelerate();
 		}
-
-		break;
-
-	case BARRIER_H || BARRIER_V || BARRIER_TURN_EN || 
-		 BARRIER_TURN_ES || BARRIER_TURN_WN || BARRIER_TURN_WS || 
-		 BARRIER_END_EW || BARRIER_END_NS || BARRIER_END_SN || BARRIER_END_WE:
-
-		currSpeed = 0;
-
-		break;
-
-	default:;
-
 	}
-	
+	else if(surface == BARRIER_H || 
+		    surface == BARRIER_V || 
+			surface == BARRIER_TURN_EN || 
+			surface == BARRIER_TURN_ES || 
+			surface == BARRIER_TURN_WN || 
+			surface == BARRIER_TURN_WS || 
+			surface == BARRIER_END_EW ||
+			surface == BARRIER_END_NS || 
+			surface == BARRIER_END_SN || 
+			surface == BARRIER_END_WE)
+	{
+		currSpeed = 0;
+	}
 }

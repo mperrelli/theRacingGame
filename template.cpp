@@ -16,7 +16,7 @@ using namespace std;
 #include "Environment.h"
 #include "Track.h"
 #include "MapLoader.h"
-#include "log.h"
+#include "Log.h"
 #include "Globals.h"
 app App;
 
@@ -36,8 +36,6 @@ void updateVehicle();
 /***************************/
 /* IMAGE/SPRITE ATTRIBUTES */
 /***************************/
-// Image indexes
-const int CAR = 2;
 
 // Sprite indexes
 const int TITLE_SCREEN_BG_INDEX			= 1;
@@ -107,14 +105,20 @@ void app::Begin( void )
 
 	// Load Images
 	agk::LoadImage(CAR,					    "resources/car.png");
+	agk::LoadImage(CAR_MOVING,              "resources/carMoving.png");
 
 	// Play Title Screen Music
 	agk::PlayMusic(TITLE_SCREEN_MUSIC, TRUE);
 
 	// Create sprites
 	userCar.createSprite(CAR_INDEX, CAR);
-	userCar.setPosition(SCREEN_WIDTH / 2 - userCar.getHeight() / 2, SCREEN_HEIGHT / 2 - userCar.getWidth() / 2);
+	userCar.setPosition(SCREEN_WIDTH / 2 - (VEHICLE_FRAME_WIDTH / 2), 
+		                SCREEN_HEIGHT / 2 - (VEHICLE_FRAME_HEIGHT / 2));
 	agk::SetSpriteDepth(CAR_INDEX, -1);
+
+	agk::SetSpriteAnimation(CAR_INDEX, VEHICLE_FRAME_WIDTH, 
+		                    VEHICLE_FRAME_HEIGHT, VEHICLE_FRAMES);
+	agk::PlaySprite(CAR_INDEX);
 
 	// Set sprite initial visibilities
 	userCar.setVisible(FALSE);
@@ -212,10 +216,10 @@ void generateTitleScreen()
 
 void chooseCarColor()
 {
-	carScreen.setVisible(TRUE);
 	red.setVisible(TRUE);
 	blue.setVisible(TRUE);
 	green.setVisible(TRUE);
+	carScreen.setVisible(TRUE);
 
 	// Check to see what color car user wants
 	if (agk::GetRawMouseLeftPressed())
@@ -223,10 +227,10 @@ void chooseCarColor()
 		float mouseX = agk::GetRawMouseX();
 		float mouseY = agk::GetRawMouseY();
 
-		switch(agk::GetSpriteHit(mouseX, mouseY))
+		switch(agk::GetSpriteHitGroup(SPRITE_GROUP_SELECTION, mouseX, mouseY))
 		{
 			case RED_INDEX:
-				userCar.setColor('R');
+				
 				break;
 			case GREEN_INDEX:
 				userCar.setColor('G');
@@ -264,23 +268,23 @@ void chooseCarType()
 		switch(agk::GetSpriteHit(mouseX, mouseY))
 		{
 			case SPEED_INDEX:
-				
+
 				userCar.setMaxSpeed(12);
 				userCar.setControlFactor(0);
-
 				break;
+
 			case BALANCE_INDEX:
 
 				userCar.setMaxSpeed(11);
 				userCar.setControlFactor(1);
-
 				break;
+
 			case CONTROL_INDEX:
 
 				userCar.setMaxSpeed(10);
 				userCar.setControlFactor(2);
-
 				break;
+
 			default:
 				break;
 		}
@@ -337,6 +341,11 @@ void createSpritesForMenus()
 	red.createSprite();
 	green.createSprite();
 	blue.createSprite();
+
+	// Set Sprite Group
+	red.setSpriteGroup(SPRITE_GROUP_SELECTION);
+	green.setSpriteGroup(SPRITE_GROUP_SELECTION);
+	blue.setSpriteGroup(SPRITE_GROUP_SELECTION);
 
 	// Set positions
 	red.setX(SCREEN_WIDTH / 2 - red.getCenterX());
