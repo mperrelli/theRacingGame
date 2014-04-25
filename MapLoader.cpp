@@ -5,6 +5,7 @@
 #include <sstream>
 #include "track.h"
 #include "Log.h"
+#include "Globals.h"
 using namespace AGK;
 using namespace std;
 

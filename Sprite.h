@@ -24,6 +24,7 @@ public:
 	void setX(float);
 	void setY(float);
 	void setVisible(bool);
+	void setSpriteGroup(int);
 
 	// Accessors
 	int getSpriteIndex() const;

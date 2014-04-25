@@ -1,7 +1,6 @@
 #pragma once
 #include "template.h"
 #include <string>
-#include "Globals.h"
 using namespace std;
 
 class Track

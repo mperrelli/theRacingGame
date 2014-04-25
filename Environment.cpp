@@ -1,10 +1,11 @@
 #include "template.h"
 #include <string>
 #include <sstream>
-#include "Globals.h"
 #include "Environment.h"
 #include "Track.h"
 #include "log.h"
+#include "Vehicle.h"
+#include "Globals.h"
 using namespace AGK;
 using namespace std;
 
@@ -53,10 +54,10 @@ void Environment::setTrack(Track t)
 *	directly to update the environment and everything that comprises the
 *	environment based on keyboard and mouse clicks
 */
-void Environment::updateEnvironment(float x, float y)
+void Environment::updateEnvironment(float x, float y, float speed)
 {
-	positionX -= x * 10;
-	positionY -= y * 10;
+	positionX -= x * speed;
+	positionY -= y * speed;
 
 	draw();
 }
@@ -180,6 +181,7 @@ void Environment::createSprites()
 			// Create a sprite for this tile.
 			agk::CreateSprite(spriteIndex, map.trackAtlas[r][c]);
 			agk::SetSpriteDepth(spriteIndex, 1);
+			agk::SetSpriteGroup(spriteIndex, SPRITE_GROUP_TRACK);
 
 			// Increment sprite Index
 			spriteIndex++;
@@ -197,10 +199,13 @@ void Environment::createSprites()
 			{
 				agk::CreateSprite(spriteIndex, map.objectAtlas[r][c]);
 				agk::SetSpriteDepth(spriteIndex, 0);
+				agk::SetSpriteGroup(spriteIndex, SPRITE_GROUP_TRACK);
 
 				// Increment sprite Index
 				spriteIndex++;
 			}
 		}
 	}
+
+	spriteIndex = g_assetsEndIndex;
 }

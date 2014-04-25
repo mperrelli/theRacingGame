@@ -11,13 +11,13 @@
 #include <string>
 using namespace AGK;
 using namespace std;
-#include "Globals.h"
 #include "Sprite.h"
 #include "Vehicle.h"
 #include "Environment.h"
 #include "Track.h"
 #include "MapLoader.h"
-#include "log.h"
+#include "Log.h"
+#include "Globals.h"
 app App;
 
 /***********************/
@@ -30,13 +30,12 @@ void chooseCarColor();
 void loadMaps();
 void chooseCarType();
 void createSpritesForMenus();
+void updateVehicle();
 
 
 /***************************/
 /* IMAGE/SPRITE ATTRIBUTES */
 /***************************/
-// Image indexes
-const int CAR					  = 2;
 
 // Sprite indexes
 const int TITLE_SCREEN_BG_INDEX			= 1;
@@ -105,13 +104,21 @@ void app::Begin( void )
 	agk::LoadMusic(TITLE_SCREEN_MUSIC,		"resources/title_screen_music.mp3");
 
 	// Load Images
-	agk::LoadImage(CAR,					    "resources/car.gif");
+	agk::LoadImage(CAR,					    "resources/car.png");
+	agk::LoadImage(CAR_MOVING,              "resources/carMoving.png");
 
 	// Play Title Screen Music
 	agk::PlayMusic(TITLE_SCREEN_MUSIC, TRUE);
 
 	// Create sprites
 	userCar.createSprite(CAR_INDEX, CAR);
+	userCar.setPosition(SCREEN_WIDTH / 2 - (VEHICLE_FRAME_WIDTH / 2), 
+		                SCREEN_HEIGHT / 2 - (VEHICLE_FRAME_HEIGHT / 2));
+	agk::SetSpriteDepth(CAR_INDEX, -1);
+
+	agk::SetSpriteAnimation(CAR_INDEX, VEHICLE_FRAME_WIDTH, 
+		                    VEHICLE_FRAME_HEIGHT, VEHICLE_FRAMES);
+	agk::PlaySprite(CAR_INDEX);
 
 	// Set sprite initial visibilities
 	userCar.setVisible(FALSE);
@@ -122,19 +129,6 @@ void app::Begin( void )
 // Main loop, called every frame
 void app::Loop ( void )
 {
-
-	/* 
-	* Every iteration of the main loop we need to check for user input
-	* We check the keyboard, cursor position, and mouse clicks.
-	*
-	* The following functions will need to be implemented
-	*
-	* updateCursor();
-	* checkMouseInput();
-	* checkKeyboardInput();
-	*
-	*/
-
 	switch(g_gameState)
 	{
 	case TITLESCREEN:
@@ -178,7 +172,9 @@ void app::Loop ( void )
 
 	case LOADING:
 
+		agk::StopMusic();
 		env.setTrack(tracks[1]);
+		userCar.setVisible(TRUE);
 
 		g_gameState = INPLAY;
 
@@ -192,12 +188,7 @@ void app::Loop ( void )
 		* environment
 		*/
 
-		float x = 0, y = 0;
-
-		x = agk::GetDirectionX();
-		y = agk::GetDirectionY();
-
-		env.updateEnvironment(x, y);
+		updateVehicle();
 
 		break;
 	}
@@ -225,10 +216,10 @@ void generateTitleScreen()
 
 void chooseCarColor()
 {
-	carScreen.setVisible(TRUE);
 	red.setVisible(TRUE);
 	blue.setVisible(TRUE);
 	green.setVisible(TRUE);
+	carScreen.setVisible(TRUE);
 
 	// Check to see what color car user wants
 	if (agk::GetRawMouseLeftPressed())
@@ -236,10 +227,10 @@ void chooseCarColor()
 		float mouseX = agk::GetRawMouseX();
 		float mouseY = agk::GetRawMouseY();
 
-		switch(agk::GetSpriteHit(mouseX, mouseY))
+		switch(agk::GetSpriteHitGroup(SPRITE_GROUP_SELECTION, mouseX, mouseY))
 		{
 			case RED_INDEX:
-				userCar.setColor('R');
+				
 				break;
 			case GREEN_INDEX:
 				userCar.setColor('G');
@@ -277,14 +268,23 @@ void chooseCarType()
 		switch(agk::GetSpriteHit(mouseX, mouseY))
 		{
 			case SPEED_INDEX:
-				// Do something with Vehicle userCar's attributes
+
+				userCar.setMaxSpeed(12);
+				userCar.setControlFactor(0);
 				break;
+
 			case BALANCE_INDEX:
-				// Do something with Vehicle userCar's attributes
+
+				userCar.setMaxSpeed(11);
+				userCar.setControlFactor(1);
 				break;
+
 			case CONTROL_INDEX:
-				// Do something with Vehicle userCar's attributes
+
+				userCar.setMaxSpeed(10);
+				userCar.setControlFactor(2);
 				break;
+
 			default:
 				break;
 		}
@@ -342,13 +342,18 @@ void createSpritesForMenus()
 	green.createSprite();
 	blue.createSprite();
 
+	// Set Sprite Group
+	red.setSpriteGroup(SPRITE_GROUP_SELECTION);
+	green.setSpriteGroup(SPRITE_GROUP_SELECTION);
+	blue.setSpriteGroup(SPRITE_GROUP_SELECTION);
+
 	// Set positions
 	red.setX(SCREEN_WIDTH / 2 - red.getCenterX());
 	red.setY(SCREEN_HEIGHT / 4 - red.getCenterY());
 	green.setX(SCREEN_WIDTH / 2 - green.getCenterX());
 	green.setY(SCREEN_HEIGHT / 2 - green.getCenterY());
 	blue.setX(SCREEN_WIDTH / 2 - blue.getCenterX());
-	blue.setY(SCREEN_HEIGHT / 1.3 - blue.getCenterY());
+	blue.setY(SCREEN_HEIGHT / 1.3f - blue.getCenterY());
 
 	carScreen.setVisible(FALSE);
 	red.setVisible(FALSE);
@@ -375,4 +380,167 @@ void createSpritesForMenus()
 	speed.setVisible(FALSE);
 	control.setVisible(FALSE);
 	balance.setVisible(FALSE);
+}
+
+void updateVehicle()
+{
+	const int EAST = 0;
+	const int EASTHIGH = 360;
+	const int SOUTH = 90;
+	const int WEST = 180;
+	const int NORTH = 270;
+
+	float x = 0, y = 0;
+
+	x = agk::GetDirectionX();
+	y = agk::GetDirectionY();
+
+	int turnspeed = userCar.getTurnSpeed();
+	int angle = (int)ceil(userCar.getAngle());
+
+	// keep angle within normal values
+	if(angle > 360)
+	{
+		angle = angle - 360;
+	}
+	else if(angle < 0)
+	{
+		angle = angle + 360;
+	}
+	else if(angle == 360)
+	{
+		angle = 0;
+	}
+
+	// get acceleration and breaking from mouse
+	if(agk::GetRawMouseLeftState())
+	{
+		userCar.accelerate();
+	}
+	else if(!agk::GetRawMouseLeftState())
+	{
+		userCar.deccelerate();
+	}
+
+	if(agk::GetRawMouseRightState())
+	{
+		userCar.applyBreak();
+	}
+
+	// Manage car animation during turns
+	if(userCar.getCurrSpeed() > 0)
+	{
+		if(angle == NORTH)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle += turnspeed;
+			}
+		}
+		else if(angle == EAST)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_UP))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle += turnspeed;
+			}
+		}
+		else if(angle == SOUTH)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle += turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle -= turnspeed;
+			}
+		}
+		else if(angle == WEST)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_UP))
+			{
+				angle += turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle -= turnspeed;
+			}
+		}
+		// Northeast Quandrent
+		else if(angle > NORTH && angle < EASTHIGH) 
+		{
+			if(agk::GetRawKeyState(AGK_KEY_UP) && agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle = angle;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_UP) || agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_RIGHT) || agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle += turnspeed;
+			}
+		}
+		// Southheast Quandrent
+		else if(angle > EAST && angle < SOUTH)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_RIGHT) && agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle = angle;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_RIGHT) || agk::GetRawKeyState(AGK_KEY_UP))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_DOWN) || agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle += turnspeed;
+			}
+		}	
+		// Southwest Quandrent
+		else if(angle > SOUTH && angle < WEST)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_LEFT) && agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle = angle;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_DOWN) || agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle -= turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_LEFT) || agk::GetRawKeyState(AGK_KEY_UP))
+			{
+				angle += turnspeed;
+			}
+		}
+		// Northwest Quandrent
+		else if(angle > WEST && angle < NORTH)
+		{
+			if(agk::GetRawKeyState(AGK_KEY_UP) && agk::GetRawKeyState(AGK_KEY_LEFT))
+			{
+				angle = angle;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_UP) || agk::GetRawKeyState(AGK_KEY_RIGHT))
+			{
+				angle += turnspeed;
+			}
+			else if(agk::GetRawKeyState(AGK_KEY_LEFT) || agk::GetRawKeyState(AGK_KEY_DOWN))
+			{
+				angle -= turnspeed;
+			}
+		}
+	}
+
+	userCar.update();
+	userCar.setAngle(angle);
+	env.updateEnvironment(x, y, userCar.getCurrSpeed());
 }
