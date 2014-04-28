@@ -24,6 +24,8 @@ const int BARRIER_END_WE   = ASSETS_START_INDEX + 16;
 
 const int TRACK_ATLAS_START_INDEX = 200;
 
+const int AI_SPRITE_START_INDEX = 1500;
+
 const int CAR = 2;
 const int CAR_MOVING = 3;
 

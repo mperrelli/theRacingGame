@@ -14,6 +14,8 @@ Track::Track()
 	objectCols = OBJECT_MAX_SIZE_COLS;
 	startPosX = 50;
 	startPosY = 50;
+	AIStartPosX = 0;
+	AIStartPosY = 0;
 
 	for(int i = 0; i < trackRows; i++)
 	{
@@ -39,6 +41,7 @@ Track::Track()
 }
 
 Track::Track(string name, string desc, int rows, int cols, int startPosX, int startPosY,
+			 int AIStartPosX,int AIStartPosY,
 			 int track[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS],
 			 int objects[OBJECT_MAX_SIZE_ROWS][OBJECT_MAX_SIZE_COLS],
 			 string assets[MAX_ASSETS])
@@ -47,6 +50,8 @@ Track::Track(string name, string desc, int rows, int cols, int startPosX, int st
 	setDescription(desc);
 	setStartPosX(startPosX);
 	setStartPosY(startPosY);
+	setAIStartPosX(AIStartPosX);
+	setAIStartPosY(AIStartPosY);
 	setRows(rows);
 	setCols(cols);
 	setAssets(assets);
@@ -120,6 +125,16 @@ int Track::getStartPosY()
 	return startPosY;
 }
 
+int Track::getAIStartPosX()
+{
+	return AIStartPosX;
+}
+
+int Track::getAIStartPosY()
+{
+	return AIStartPosY;
+}
+
 void Track::setTrack(int track[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS])
 {
 	for(int i = 0; i < trackRows; i++)
@@ -161,4 +176,14 @@ string Track::getPathToAsset(int index)
 	string path = "resources/" + getName() + "/" + assets[index] + "";
 
 	return path;
+}
+
+void Track::setAIStartPosX(int posX)
+{
+	AIStartPosX = posX;
+}
+
+void Track::setAIStartPosY(int posY)
+{
+	AIStartPosY = posY;
 }

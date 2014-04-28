@@ -53,6 +53,8 @@ void MapLoader::loadFile(string file)
 				cols = atoi(lines[i+4].substr(5).c_str());
 				startPosX = atoi(lines[i+5].substr(10).c_str());
 				startPosY = atoi(lines[i+6].substr(10).c_str());
+				AIStartPosX = atoi(lines[i+7].substr(12).c_str());
+				AIStartPosY = atoi(lines[i+8].substr(12).c_str());
 			}
 
 			if(lines[i] == "-assets")
@@ -139,6 +141,8 @@ void MapLoader::storeData()
 	map.setRows(rows);
 	map.setStartPosX(startPosX);
 	map.setStartPosY(startPosY);
+	map.setAIStartPosX(AIStartPosX);
+	map.setAIStartPosY(AIStartPosY);
 	map.setAssets(assets);
 	map.setTrack(track);
 	map.setObjects(objects);

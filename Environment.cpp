@@ -6,6 +6,7 @@
 #include "log.h"
 #include "Vehicle.h"
 #include "Globals.h"
+#include "AI.h"
 using namespace AGK;
 using namespace std;
 
@@ -15,6 +16,15 @@ Environment::Environment()
 	positionY = 0;
 	tileRows = 0;
 	tileCols = 0;
+	AIPosX = 0;
+	AIPosY = 0;
+
+	AIHead = NULL;
+	AITailItem = NULL;
+	AIListSize = 0;
+
+	timer = 0;
+	addAIInterval = 200;
 }
 
 Environment::~Environment(void)
@@ -30,6 +40,9 @@ void Environment::processTrack()
 
 	positionX = SCREEN_CENTER_X - map.getStartPosX();
 	positionY = SCREEN_CENTER_Y - map.getStartPosY();
+
+	AIPosX = map.getAIStartPosX();
+	AIPosY = map.getAIStartPosY();
 }
 
 /*
@@ -59,6 +72,10 @@ void Environment::updateEnvironment(float x, float y, float speed)
 	positionX -= x * speed;
 	positionY -= y * speed;
 
+	timer++;
+
+	manageAI();
+
 	draw();
 }
 
@@ -80,6 +97,16 @@ float Environment::getPositionX()
 float Environment::getPositionY()
 {
 	return positionY;
+}
+
+float Environment::getAIStartX()
+{
+	return positionX + AIPosX;
+}
+
+float Environment::getAIStartY()
+{
+	return positionY + AIPosY;
 }
 
 /*
@@ -207,5 +234,68 @@ void Environment::createSprites()
 		}
 	}
 
-	spriteIndex = g_assetsEndIndex;
+	g_assetsEndIndex = spriteIndex;
+}
+
+void Environment::manageAI()
+{
+	// Check interval and add a new AI if necessary
+	if(timer % addAIInterval == 0)
+	{
+		addAI();
+	}
+
+	// Update all AI positions
+	updateAI();
+}
+
+void Environment::addAI()
+{
+	// Position
+	float posY = getAIStartY();
+	float posX = getAIStartX();
+
+	// A new sprite is dynamically created
+	AI *a = new AI;
+	a -> createSprite(AI_SPRITE_START_INDEX + AIListSize, "Resources/carMoving.png");
+	a -> setPosition(posX, posY);
+
+	// AGK functions
+	agk::SetSpriteDepth(AI_SPRITE_START_INDEX + AIListSize, -1);
+	agk::SetSpriteAnimation(AI_SPRITE_START_INDEX + AIListSize, VEHICLE_FRAME_WIDTH, 
+		                    VEHICLE_FRAME_HEIGHT, VEHICLE_FRAMES);
+	agk::PlaySprite(AI_SPRITE_START_INDEX + AIListSize);
+
+	AIListSize++;
+	
+	// A new node is created in the linked list
+	ptr newptr;
+	newptr = new AINode;
+	newptr -> sprite = a;
+	newptr -> next = NULL;
+
+	if(AIHead == NULL)
+	{
+		AIHead = newptr;
+	}
+	else
+	{
+		AITailItem -> next = newptr;
+	}
+
+	AITailItem = newptr;
+}
+
+void Environment::updateAI()
+{
+	ptr cur = AIHead;
+
+	float x = getAIStartX(), y = getAIStartY();
+
+	while(cur != NULL)
+	{
+		cur->sprite->advancePosition(x, y, timer);
+
+		cur = cur -> next;
+	}
 }

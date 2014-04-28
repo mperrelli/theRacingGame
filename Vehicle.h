@@ -1,5 +1,4 @@
-#ifndef VEHICLE_H
-#define VEHICLE_H
+#pragma once
 #include "template.h"
 #include <string>
 #include "Sprite.h"
@@ -42,5 +41,3 @@ public:
 	int getTurnSpeed();
 	void update();
 };
-
-#endif

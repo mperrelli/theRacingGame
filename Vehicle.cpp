@@ -177,7 +177,7 @@ void Vehicle::update()
 	}
 
 	// Get surface
-	sIndex = agk::GetSpriteHitGroup(1 ,getCenterX(), getCenterY());
+	sIndex = agk::GetSpriteHitGroup(SPRITE_GROUP_TRACK ,getCenterX(), getCenterY());
 
 	surface = agk::GetSpriteImageID(sIndex);
 

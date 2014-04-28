@@ -18,6 +18,7 @@ using namespace std;
 #include "MapLoader.h"
 #include "Log.h"
 #include "Globals.h"
+#include "AI.h"
 app App;
 
 /***********************/
@@ -31,7 +32,6 @@ void loadMaps();
 void chooseCarType();
 void createSpritesForMenus();
 void updateVehicle();
-
 
 /***************************/
 /* IMAGE/SPRITE ATTRIBUTES */

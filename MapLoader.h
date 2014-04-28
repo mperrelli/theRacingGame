@@ -20,6 +20,8 @@ private:
 	int cols;
 	int startPosX;
 	int startPosY;
+	int AIStartPosX;
+	int AIStartPosY;
 
 	int applyAssetOffset(int);
 
