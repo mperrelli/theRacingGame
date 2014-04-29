@@ -299,3 +299,13 @@ void Environment::updateAI()
 		cur = cur -> next;
 	}
 }
+
+int Environment::getTime()
+{
+	return timer;
+}
+
+int Environment::getAIAmount()
+{
+	return AIListSize;
+}

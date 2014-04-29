@@ -202,6 +202,11 @@ void Vehicle::update()
 			surface == BARRIER_END_SN || 
 			surface == BARRIER_END_WE)
 	{
-		currSpeed = 0;
+		health = 0;
 	}
+}
+
+int Vehicle::getSpeed()
+{
+	return currSpeed * 8.5;
 }

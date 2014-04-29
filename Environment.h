@@ -58,6 +58,8 @@ public:
 	void setPositionY(float posY);
 	void draw();
 	void setTrack(Track t);
+	int getTime();
+	int getAIAmount();
 
 	float getPositionX();
 	float getPositionY();

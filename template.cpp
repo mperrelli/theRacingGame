@@ -9,6 +9,7 @@
 // Includes, namespace and prototypes
 #include "template.h"
 #include <string>
+#include <sstream>
 using namespace AGK;
 using namespace std;
 #include "Sprite.h"
@@ -32,6 +33,8 @@ void loadMaps();
 void chooseCarType();
 void createSpritesForMenus();
 void updateVehicle();
+void checkCollisions();
+void updateHud();
 
 /***************************/
 /* IMAGE/SPRITE ATTRIBUTES */
@@ -52,6 +55,12 @@ const int CONTROL_INDEX					= 10;
 // Sound and Music indexes
 const int TITLE_SCREEN_MUSIC = 1;
 
+// Text Indexes
+const int HEALTH_LABEL = 1;
+const int HEALTH_VALUE = 2;
+const int SPEED_LABEL  = 3;
+const int SPEED_VALUE  = 4;
+
 
 /*************************/
 /* GAMESTATES ATTRIBUTES */
@@ -62,7 +71,8 @@ const int TITLESCREEN  = 0,
 		  PICKCARCOLOR = 3,
 		  PICKCARTYPE  = 4,
 		  LOADING      = 5,
-		  INPLAY       = 6;
+		  INPLAY       = 6,
+		  GAMEOVER     = 7;
 
 int	g_gameState		   = TITLESCREEN;
 
@@ -123,6 +133,50 @@ void app::Begin( void )
 	// Set sprite initial visibilities
 	userCar.setVisible(FALSE);
 
+	// Set hud items
+	const int PADDING = 10;
+	const int SIZE = 26;
+
+	agk::CreateText(HEALTH_LABEL, "Health: ");
+	agk::CreateText(HEALTH_VALUE, "100");
+	agk::CreateText(SPEED_LABEL,  "Speed: ");
+	agk::CreateText(SPEED_VALUE,  "000");
+
+	agk::SetTextSize(HEALTH_LABEL, SIZE);
+	agk::SetTextSize(HEALTH_VALUE, SIZE);
+	agk::SetTextSize(SPEED_LABEL,  SIZE);
+	agk::SetTextSize(SPEED_VALUE,  SIZE);
+
+	agk::SetTextDepth(HEALTH_LABEL,  -2);
+	agk::SetTextDepth(HEALTH_VALUE,  -2);
+	agk::SetTextDepth(SPEED_LABEL,   -2);
+	agk::SetTextDepth(SPEED_VALUE,   -2);
+
+	agk::SetTextPosition(HEALTH_LABEL, SCREEN_WIDTH / 2 -
+		                 agk::GetTextTotalWidth(HEALTH_VALUE) - PADDING,
+						 SCREEN_HEIGHT - 
+						 agk::GetTextTotalHeight(HEALTH_LABEL));
+	agk::SetTextAlignment(HEALTH_LABEL, 2);
+
+	agk::SetTextPosition(HEALTH_VALUE, SCREEN_WIDTH / 2 - PADDING,
+						 SCREEN_HEIGHT - 
+						 agk::GetTextTotalHeight(HEALTH_LABEL));
+	agk::SetTextAlignment(HEALTH_VALUE, 2);
+
+	agk::SetTextPosition(SPEED_LABEL, SCREEN_WIDTH / 2 + PADDING, 
+						 SCREEN_HEIGHT - 
+						 agk::GetTextTotalHeight(SPEED_LABEL));
+
+	agk::SetTextPosition(SPEED_VALUE, SCREEN_WIDTH / 2 + 
+		                 agk::GetTextTotalWidth(SPEED_LABEL) + PADDING,
+						 SCREEN_HEIGHT - 
+						 agk::GetTextTotalHeight(SPEED_VALUE));
+
+	agk::SetTextVisible(HEALTH_LABEL, FALSE);
+	agk::SetTextVisible(HEALTH_VALUE, FALSE);
+	agk::SetTextVisible(SPEED_LABEL, FALSE);
+	agk::SetTextVisible(SPEED_VALUE, FALSE);
+
 	loadMaps();
 }
 
@@ -176,6 +230,11 @@ void app::Loop ( void )
 		env.setTrack(tracks[1]);
 		userCar.setVisible(TRUE);
 
+		agk::SetTextVisible(HEALTH_LABEL, TRUE);
+		agk::SetTextVisible(HEALTH_VALUE, TRUE);
+		agk::SetTextVisible(SPEED_LABEL,  TRUE);
+		agk::SetTextVisible(SPEED_VALUE,  TRUE);
+
 		g_gameState = INPLAY;
 
 		break;
@@ -190,6 +249,25 @@ void app::Loop ( void )
 
 		updateVehicle();
 
+		checkCollisions();
+
+		updateHud();
+
+		if(userCar.getHealth() <= 0)
+		{
+			g_gameState = GAMEOVER;
+		}
+
+		break;
+		
+	case GAMEOVER:
+
+		agk::DeleteText(HEALTH_LABEL);
+		agk::DeleteText(HEALTH_VALUE);
+		agk::DeleteText(SPEED_LABEL);
+		agk::DeleteText(SPEED_VALUE);
+
+		agk::Print("GAMEOVER");
 		break;
 	}
 
@@ -543,4 +621,43 @@ void updateVehicle()
 	userCar.update();
 	userCar.setAngle(angle);
 	env.updateEnvironment(x, y, userCar.getCurrSpeed());
+}
+
+void checkCollisions()
+{
+	int vehicleIndex = userCar.getSpriteIndex();
+
+	if(env.getTime() % 10 == 0)
+	{
+		for(int i = AI_SPRITE_START_INDEX; i < AI_SPRITE_START_INDEX + env.getAIAmount(); i++)
+		{
+			if(agk::GetSpriteCollision(vehicleIndex, i))
+			{
+				userCar.setHealth(userCar.getHealth() - 20);
+			}
+		}
+
+		int sIndex = agk::GetSpriteHitGroup(SPRITE_GROUP_TRACK , userCar.getCenterX(), userCar.getCenterY());
+
+		if(agk::GetSpriteImageID(sIndex) == BG)
+		{
+			userCar.setHealth(userCar.getHealth() - 5);
+		}
+	}
+}
+
+void updateHud()
+{
+	ostringstream ss;
+	ss << userCar.getHealth();
+	string health(ss.str());
+
+	agk::SetTextString(HEALTH_VALUE, health.c_str());
+
+	ss.str(std::string());
+
+	ss << userCar.getSpeed();
+	string speed(ss.str());
+
+	agk::SetTextString(SPEED_VALUE, speed.c_str());
 }

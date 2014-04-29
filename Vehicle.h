@@ -40,4 +40,5 @@ public:
 	void applyBreak();
 	int getTurnSpeed();
 	void update();
+	int getSpeed();
 };
