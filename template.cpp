@@ -28,6 +28,7 @@ app App;
 void generateTitleScreen();
 void generateInstructions();
 void generateCarScreen();
+void generateTrackScreen();
 void chooseCarColor();
 void loadMaps();
 void chooseCarType();
@@ -51,6 +52,9 @@ const int CHOOSE_CAR_TYPE_SCREEN_INDEX  = 7;
 const int SPEED_INDEX					= 8;
 const int BALANCE_INDEX					= 9;
 const int CONTROL_INDEX					= 10;
+const int CHOOSE_TRACK_SCREEN_INDEX     = 11;
+const int LINEAR_INDEX				    = 12;
+const int LOOP_INDEX					= 13;
 
 // Sound and Music indexes
 const int TITLE_SCREEN_MUSIC = 1;
@@ -75,6 +79,7 @@ const int TITLESCREEN  = 0,
 		  GAMEOVER     = 7;
 
 int	g_gameState		   = TITLESCREEN;
+int track;
 
 
 /*********************************/
@@ -101,7 +106,10 @@ Sprite titleScreen(TITLE_SCREEN_BG_INDEX,			"resources/title_screen_bg.jpg"),
 	   carTypeScreen(CHOOSE_CAR_TYPE_SCREEN_INDEX,	"resources/choose_car_type_screen.jpg"),
 	   speed(SPEED_INDEX,							"resources/speed.png"),
 	   control(CONTROL_INDEX,						"resources/control.png"),
-	   balance(BALANCE_INDEX,						"resources/balance.png");
+	   balance(BALANCE_INDEX,						"resources/balance.png"),
+	   trackScreen(CHOOSE_TRACK_SCREEN_INDEX,		"resources/choose_track_screen.jpg"),
+	   linearTrack(LINEAR_INDEX,					"resources/linear_track.png"),
+	   loopTrack(LOOP_INDEX,						"resources/loop_track.png");
 
 // Begin app, called once at the start
 void app::Begin( void )
@@ -205,9 +213,9 @@ void app::Loop ( void )
 		* The user should also be selecting a difficulty here
 		*/
 
-		g_gameState = PICKCARCOLOR;
-
+		generateTrackScreen();
 		break;
+
 
 	case PICKCARCOLOR:
 
@@ -227,7 +235,7 @@ void app::Loop ( void )
 	case LOADING:
 
 		agk::StopMusic();
-		env.setTrack(tracks[1]);
+		env.setTrack(tracks[track]);
 		userCar.setVisible(TRUE);
 
 		agk::SetTextVisible(HEALTH_LABEL, TRUE);
@@ -290,6 +298,40 @@ void generateTitleScreen()
 		createSpritesForMenus();
 		g_gameState = INSTRUCTIONS;
 	}
+}
+
+void generateTrackScreen()
+{
+	trackScreen.setVisible(TRUE);
+	linearTrack.setVisible(TRUE);
+	loopTrack.setVisible(TRUE);
+
+	// Check to see what track car user wants
+	if (agk::GetRawMouseLeftPressed())
+	{
+		float mouseX = agk::GetRawMouseX();
+		float mouseY = agk::GetRawMouseY();
+
+		switch(agk::GetSpriteHitGroup(SPRITE_GROUP_TRACK, mouseX, mouseY))
+		{
+			case LINEAR_INDEX:
+				track = 0;
+				break;
+			case LOOP_INDEX:
+				track = 1;
+				break;
+			default:
+				break;
+		}
+
+		// Destroy sprites not in use
+		trackScreen.~Sprite();
+		linearTrack.~Sprite();
+		loopTrack.~Sprite();
+
+		g_gameState = PICKCARCOLOR;
+	}
+
 }
 
 void chooseCarColor()
@@ -414,13 +456,34 @@ void loadMaps()
 // We only want to create and position a single time.
 void createSpritesForMenus()
 {
+	// Track selection sprite setup
+	trackScreen.createSprite();
+	linearTrack.createSprite();
+	loopTrack.createSprite();
+
+	// Set Track Sprite Group
+	trackScreen.setSpriteGroup(SPRITE_GROUP_TRACK);
+	linearTrack.setSpriteGroup(SPRITE_GROUP_TRACK);
+	loopTrack.setSpriteGroup(SPRITE_GROUP_TRACK);
+
+	// Set positions
+	linearTrack.setPosition(50, 
+							SCREEN_HEIGHT / 2 - linearTrack.getCenterY());
+	loopTrack.setPosition(SCREEN_WIDTH - loopTrack.getWidth() - 50,
+						  SCREEN_HEIGHT / 2 - loopTrack.getCenterY());
+
+	// Set default visibility
+	trackScreen.setVisible(FALSE);
+	linearTrack.setVisible(FALSE);
+	loopTrack.setVisible(FALSE);
+
 	// Car color selection sprite setup
 	carScreen.createSprite();
 	red.createSprite();
 	green.createSprite();
 	blue.createSprite();
 
-	// Set Sprite Group
+	// Set Color Sprite Group
 	red.setSpriteGroup(SPRITE_GROUP_SELECTION);
 	green.setSpriteGroup(SPRITE_GROUP_SELECTION);
 	blue.setSpriteGroup(SPRITE_GROUP_SELECTION);
