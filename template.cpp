@@ -1,25 +1,26 @@
 // Programmers: Matt Perrelli, Anthony Mascia, Andrew Goreckie
 // Course:	    CMPT 456 
-// Due Date:    N/A
+// Due Date:    5 May 2014
 //
-// The Racing Game
+// Unnecessary Vehicle Avoidance Training
 //
-// Description will go here
+// UVAT is a game where on must traverse a track as cleanly as 
+// possible to stay on the track and avoide other cars as they 
+// come speeding by. Survive until the time runs out and you win!
 
 // Includes, namespace and prototypes
 #include "template.h"
 #include <string>
 #include <sstream>
-using namespace AGK;
-using namespace std;
 #include "Sprite.h"
 #include "Vehicle.h"
 #include "Environment.h"
 #include "Track.h"
 #include "MapLoader.h"
-#include "Log.h"
 #include "Globals.h"
 #include "AI.h"
+using namespace AGK;
+using namespace std;
 app App;
 
 /***********************/
@@ -38,7 +39,7 @@ void checkCollisions();
 void updateHud();
 
 /***************************/
-/* IMAGE/SPRITE ATTRIBUTES */
+/* IMAGE/SPRITE INDICES    */
 /***************************/
 
 // Sprite indexes
@@ -82,7 +83,6 @@ const int TITLESCREEN  = 0,
 		  WIN		   = 8;
 
 int	g_gameState		   = TITLESCREEN;
-int track;
 
 
 /*********************************/
@@ -90,6 +90,7 @@ int track;
 /*********************************/
 const int MAX_TRACKS = 10;
 int g_tracksAmt = 0;
+int g_selectedTrack;
 
 Track tracks[MAX_TRACKS];
 
@@ -131,7 +132,7 @@ void app::Begin( void )
 	// Play Title Screen Music
 	agk::PlayMusic(TITLE_SCREEN_MUSIC, TRUE);
 
-	// Create sprites
+	// Create userCar sprite and set all its attributes
 	userCar.createSprite(CAR_INDEX, CAR);
 	userCar.setPosition(SCREEN_WIDTH / 2 - (VEHICLE_FRAME_WIDTH / 2), 
 		                SCREEN_HEIGHT / 2 - (VEHICLE_FRAME_HEIGHT / 2));
@@ -155,12 +156,12 @@ void app::Begin( void )
 	agk::CreateText(SPEED_LABEL,  "Speed: ");
 	agk::CreateText(SPEED_VALUE,  "000");
 
-	agk::SetTextSize(HEALTH_LABEL, SIZE);
-	agk::SetTextSize(HEALTH_VALUE, SIZE);
-	agk::SetTextSize(SPEED_LABEL,  SIZE);
-	agk::SetTextSize(SPEED_VALUE,  SIZE);
-	agk::SetTextSize(TIMER_LABEL,  SIZE);
-	agk::SetTextSize(TIMER_VALUE,  SIZE);
+	agk::SetTextSize(HEALTH_LABEL, (float)SIZE);
+	agk::SetTextSize(HEALTH_VALUE, (float)SIZE);
+	agk::SetTextSize(SPEED_LABEL,  (float)SIZE);
+	agk::SetTextSize(SPEED_VALUE,  (float)SIZE);
+	agk::SetTextSize(TIMER_LABEL,  (float)SIZE);
+	agk::SetTextSize(TIMER_VALUE,  (float)SIZE);
 
 	agk::SetTextDepth(HEALTH_LABEL,  -2);
 	agk::SetTextDepth(HEALTH_VALUE,  -2);
@@ -192,12 +193,12 @@ void app::Begin( void )
 	agk::SetTextPosition(TIMER_LABEL, SCREEN_WIDTH / 2 - 
 						((agk::GetTextTotalWidth(TIMER_LABEL) + 
 						  agk::GetTextTotalWidth(TIMER_VALUE)) / 2)
-						  , PADDING);
+						  , (float)PADDING);
 
 	agk::SetTextPosition(TIMER_VALUE, SCREEN_WIDTH / 2 + 
 						((agk::GetTextTotalWidth(TIMER_LABEL) + 
 						  agk::GetTextTotalWidth(TIMER_VALUE)) / 2)
-						  , PADDING);
+						  , (float)PADDING);
 
 	agk::SetTextVisible(HEALTH_LABEL, FALSE);
 	agk::SetTextVisible(HEALTH_VALUE, FALSE);
@@ -226,24 +227,10 @@ void app::Loop ( void )
 
 	case PICKMAP:
 
-		/*
-		* This is where we build a screen that displays map selection.
-		* Right now this is a choice between two maps. Linear or Cyclical.
-		* user clicks on one of the other and then we generate a map based on that.
-		*
-		* The user should also be selecting a difficulty here
-		*/
-
 		generateTrackScreen();
 		break;
 
-
 	case PICKCARCOLOR:
-
-		/*
-		* The user will select a vehicle. I'm not really sure where we want to go with this.
-		* We should at least be selecting between control, speed or balanced and a color.
-		*/
 
 		chooseCarColor();
 		break;
@@ -256,7 +243,7 @@ void app::Loop ( void )
 	case LOADING:
 
 		agk::StopMusic();
-		env.setTrack(tracks[track]);
+		env.setTrack(tracks[g_selectedTrack]);
 		userCar.setVisible(TRUE);
 
 		agk::SetTextVisible(HEALTH_LABEL, TRUE);
@@ -271,12 +258,6 @@ void app::Loop ( void )
 		break;
 
 	case INPLAY:
-
-		/*
-		* do somthing.. this will probably include checking
-		* for input and updateing the screen IE updateing the
-		* environment
-		*/
 
 		updateVehicle();
 
@@ -326,11 +307,15 @@ void app::End ( void )
 void generateTitleScreen()
 {
 	titleScreen.createSprite();
+
 	// When enter pressed, show instruction screen
 	if(agk::GetRawKeyPressed(AGK_KEY_ENTER))
 	{
 		titleScreen.~Sprite();
+
 		createSpritesForMenus();
+
+		// Advance gamestate
 		g_gameState = INSTRUCTIONS;
 	}
 }
@@ -350,11 +335,15 @@ void generateTrackScreen()
 		switch(agk::GetSpriteHitGroup(SPRITE_GROUP_TRACK, mouseX, mouseY))
 		{
 			case LINEAR_INDEX:
-				track = 0;
+
+				g_selectedTrack = 0;
 				break;
+
 			case LOOP_INDEX:
-				track = 1;
+
+				g_selectedTrack = 1;
 				break;
+
 			default:
 				break;
 		}
@@ -364,6 +353,7 @@ void generateTrackScreen()
 		linearTrack.~Sprite();
 		loopTrack.~Sprite();
 
+		// Advance gamestate
 		g_gameState = PICKCARCOLOR;
 	}
 
@@ -403,6 +393,7 @@ void chooseCarColor()
 		green.~Sprite();
 		blue.~Sprite();
 
+		// Advance gamestate
 		g_gameState = PICKCARTYPE;
 	}
 }
@@ -450,6 +441,7 @@ void chooseCarType()
 		balance.~Sprite();
 		control.~Sprite();
 
+		// Advance gamestate
 		g_gameState = LOADING;
 	}
 }
@@ -558,14 +550,9 @@ void createSpritesForMenus()
 	balance.setVisible(FALSE);
 }
 
+// Update Vehicle angle, speed based on input
 void updateVehicle()
 {
-	const int EAST = 0;
-	const int EASTHIGH = 360;
-	const int SOUTH = 90;
-	const int WEST = 180;
-	const int NORTH = 270;
-
 	float x = 0, y = 0;
 
 	x = agk::GetDirectionX();
@@ -606,7 +593,7 @@ void updateVehicle()
 	// Manage car animation during turns
 	if(userCar.getCurrSpeed() > 0)
 	{
-		if(angle == NORTH)
+		if(angle == NORTH_ANGLE)
 		{
 			if(agk::GetRawKeyState(AGK_KEY_LEFT))
 			{
@@ -617,7 +604,7 @@ void updateVehicle()
 				angle += turnspeed;
 			}
 		}
-		else if(angle == EAST)
+		else if(angle == EAST_ANGLE)
 		{
 			if(agk::GetRawKeyState(AGK_KEY_UP))
 			{
@@ -628,7 +615,7 @@ void updateVehicle()
 				angle += turnspeed;
 			}
 		}
-		else if(angle == SOUTH)
+		else if(angle == SOUTH_ANGLE)
 		{
 			if(agk::GetRawKeyState(AGK_KEY_LEFT))
 			{
@@ -639,7 +626,7 @@ void updateVehicle()
 				angle -= turnspeed;
 			}
 		}
-		else if(angle == WEST)
+		else if(angle == WEST_ANGLE)
 		{
 			if(agk::GetRawKeyState(AGK_KEY_UP))
 			{
@@ -651,7 +638,7 @@ void updateVehicle()
 			}
 		}
 		// Northeast Quandrent
-		else if(angle > NORTH && angle < EASTHIGH) 
+		else if(angle > NORTH_ANGLE && angle < EASTHIGH_ANGLE) 
 		{
 			if(agk::GetRawKeyState(AGK_KEY_UP) && agk::GetRawKeyState(AGK_KEY_RIGHT))
 			{
@@ -667,7 +654,7 @@ void updateVehicle()
 			}
 		}
 		// Southheast Quandrent
-		else if(angle > EAST && angle < SOUTH)
+		else if(angle > EAST_ANGLE && angle < SOUTH_ANGLE)
 		{
 			if(agk::GetRawKeyState(AGK_KEY_RIGHT) && agk::GetRawKeyState(AGK_KEY_DOWN))
 			{
@@ -683,7 +670,7 @@ void updateVehicle()
 			}
 		}	
 		// Southwest Quandrent
-		else if(angle > SOUTH && angle < WEST)
+		else if(angle > SOUTH_ANGLE && angle < WEST_ANGLE)
 		{
 			if(agk::GetRawKeyState(AGK_KEY_LEFT) && agk::GetRawKeyState(AGK_KEY_DOWN))
 			{
@@ -699,7 +686,7 @@ void updateVehicle()
 			}
 		}
 		// Northwest Quandrent
-		else if(angle > WEST && angle < NORTH)
+		else if(angle > WEST_ANGLE && angle < NORTH_ANGLE)
 		{
 			if(agk::GetRawKeyState(AGK_KEY_UP) && agk::GetRawKeyState(AGK_KEY_LEFT))
 			{
@@ -721,12 +708,14 @@ void updateVehicle()
 	env.updateEnvironment(x, y, userCar.getCurrSpeed());
 }
 
+// Check collisions between vehicles and the track
 void checkCollisions()
 {
 	int vehicleIndex = userCar.getSpriteIndex();
 
 	if(env.getTime() % 10 == 0)
 	{
+		// Check other vehicles
 		for(int i = AI_SPRITE_START_INDEX; i < AI_SPRITE_START_INDEX + env.getAIAmount(); i++)
 		{
 			if(agk::GetSpriteCollision(vehicleIndex, i))
@@ -735,6 +724,7 @@ void checkCollisions()
 			}
 		}
 
+		// Check current surface below vehicle
 		int sIndex = agk::GetSpriteHitGroup(SPRITE_GROUP_TRACK , userCar.getCenterX(), userCar.getCenterY());
 
 		if(agk::GetSpriteImageID(sIndex) == BG)
@@ -744,9 +734,12 @@ void checkCollisions()
 	}
 }
 
+// Updates the Heads-up Display
 void updateHud()
 {
 	ostringstream ss;
+
+	// Health
 	ss << userCar.getHealth();
 	string health(ss.str());
 
@@ -754,6 +747,7 @@ void updateHud()
 
 	ss.str(std::string());
 
+	// Speed
 	ss << userCar.getSpeed();
 	string speed(ss.str());
 
@@ -761,6 +755,7 @@ void updateHud()
 
 	ss.str(std::string());
 
+	// Timer
 	ss << env.getTimeRemaining();
 	string time(ss.str());
 

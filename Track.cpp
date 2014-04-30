@@ -1,7 +1,7 @@
 #include "template.h"
 #include <string>
+#include "Globals.h"
 #include "Track.h"
-#include "Log.h"
 using namespace std;
 
 Track::Track()
@@ -12,10 +12,11 @@ Track::Track()
 	trackCols = TRACK_MAX_SIZE_COLS;
 	objectRows = OBJECT_MAX_SIZE_ROWS;
 	objectCols = OBJECT_MAX_SIZE_COLS;
-	startPosX = 50;
-	startPosY = 50;
+	startPosX = 0;
+	startPosY = 0;
 	AIStartPosX = 0;
 	AIStartPosY = 0;
+	time = 0;
 
 	for(int i = 0; i < trackRows; i++)
 	{
@@ -44,7 +45,7 @@ Track::Track(string name, string desc, int rows, int cols, int startPosX, int st
 			 int AIStartPosX,int AIStartPosY,
 			 int track[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS],
 			 int objects[OBJECT_MAX_SIZE_ROWS][OBJECT_MAX_SIZE_COLS],
-			 string assets[MAX_ASSETS])
+			 string assets[MAX_ASSETS], int time)
 {
 	setName(name);
 	setDescription(desc);
@@ -57,6 +58,7 @@ Track::Track(string name, string desc, int rows, int cols, int startPosX, int st
 	setAssets(assets);
 	setTrack(track);
 	setObjects(objects);
+	setTime(time);
 }
 
 Track::~Track(void)
@@ -96,13 +98,13 @@ void Track::setDescription(string d)
 void Track::setRows(int r)
 {
 	trackRows = r;
-	objectRows = r * 4;
+	objectRows = r * OBJECTS_PER_TILEROW;
 }
 
 void Track::setCols(int c)
 {
 	trackCols = c;
-	objectCols = c * 4;
+	objectCols = c * OBJECTS_PER_TILEROW;
 }
 
 void Track::setStartPosX(int posX)

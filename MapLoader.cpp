@@ -1,10 +1,8 @@
-#include "MapLoader.h"
 #include "template.h"
 #include <string>
-#include <vector>
 #include <sstream>
-#include "track.h"
-#include "Log.h"
+#include "MapLoader.h"
+#include "Track.h"
 #include "Globals.h"
 using namespace AGK;
 using namespace std;
@@ -90,7 +88,7 @@ void MapLoader::loadFile(string file)
 
 			if(lines[i] == "-objects")
 			{
-				for(int j = 1; j <= rows * 4; j++)
+				for(int j = 1; j <= rows * OBJECTS_PER_TILEROW; j++)
 				{
 					processObjectRow(lines[i + j], j - 1);
 				}

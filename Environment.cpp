@@ -1,10 +1,6 @@
 #include "template.h"
-#include <string>
-#include <sstream>
 #include "Environment.h"
 #include "Track.h"
-#include "log.h"
-#include "Vehicle.h"
 #include "Globals.h"
 #include "AI.h"
 using namespace AGK;
@@ -16,16 +12,12 @@ Environment::Environment()
 	positionY = 0;
 	tileRows = 0;
 	tileCols = 0;
-	AIPosX = 0;
-	AIPosY = 0;
-	time = 0;
 
 	AIHead = NULL;
 	AITailItem = NULL;
 	AIListSize = 0;
 
 	timer = 0;
-	addAIInterval = 200;
 }
 
 Environment::~Environment(void)
@@ -36,16 +28,11 @@ void Environment::processTrack()
 {
 	tileRows = map.getRows();
 	tileCols = map.getCols();
-	objectRows = tileRows * 4;
-	objectCols = tileCols * 4;
+	objectRows = tileRows * OBJECTS_PER_TILEROW;
+	objectCols = tileCols * OBJECTS_PER_TILEROW;
 
-	positionX = SCREEN_CENTER_X - map.getStartPosX();
-	positionY = SCREEN_CENTER_Y - map.getStartPosY();
-
-	AIPosX = map.getAIStartPosX();
-	AIPosY = map.getAIStartPosY();
-
-	time = map.getTime();
+	positionX = float(SCREEN_CENTER_X - map.getStartPosX());
+	positionY = float(SCREEN_CENTER_Y - map.getStartPosY());
 }
 
 /*
@@ -80,36 +67,6 @@ void Environment::updateEnvironment(float x, float y, float speed)
 	manageAI();
 
 	draw();
-}
-
-void Environment::setPositionX(float posX)
-{
-	positionX = posX;
-}
-
-void Environment::setPositionY(float posY)
-{
-	positionY = posY;
-}
-
-float Environment::getPositionX()
-{
-	return positionX;
-}
-
-float Environment::getPositionY()
-{
-	return positionY;
-}
-
-float Environment::getAIStartX()
-{
-	return positionX + AIPosX;
-}
-
-float Environment::getAIStartY()
-{
-	return positionY + AIPosY;
 }
 
 /*
@@ -187,7 +144,7 @@ void Environment::loadTiles()
 {  
 	string temp;
 
-	for(int i = 0; i < map.MAX_ASSETS; i++)
+	for(int i = 0; i < MAX_ASSETS; i++)
 	{
 		temp = map.getPathToAsset(i);
 		agk::LoadImage(ASSETS_START_INDEX + i, temp.c_str());
@@ -243,7 +200,7 @@ void Environment::createSprites()
 void Environment::manageAI()
 {
 	// Check interval and add a new AI if necessary
-	if(timer % addAIInterval == 0)
+	if(timer % ADD_AI_INTERVAL == 0)
 	{
 		addAI();
 	}
@@ -264,7 +221,7 @@ void Environment::addAI()
 	a -> setPosition(posX, posY);
 
 	// AGK functions
-	agk::SetSpriteDepth(AI_SPRITE_START_INDEX + AIListSize, -1);
+	agk::SetSpriteDepth(AI_SPRITE_START_INDEX + AIListSize, SPRITE_AI_DEPTH);
 	agk::SetSpriteAnimation(AI_SPRITE_START_INDEX + AIListSize, VEHICLE_FRAME_WIDTH, 
 		                    VEHICLE_FRAME_HEIGHT, VEHICLE_FRAMES);
 	agk::PlaySprite(AI_SPRITE_START_INDEX + AIListSize);
@@ -289,6 +246,8 @@ void Environment::addAI()
 	AITailItem = newptr;
 }
 
+// Update AI positions based on environment position
+// and their speed.
 void Environment::updateAI()
 {
 	ptr cur = AIHead;
@@ -315,5 +274,38 @@ int Environment::getAIAmount()
 
 int Environment::getTimeRemaining()
 {
-	return time - (getTime() / 70);
+	// getTime() returns the amount of iterations through the loop.
+	// Dividing this by 70 is an inaccurate method of generating a 
+	// second. But for presentaiton purposes it should work.
+	return map.getTime() - (getTime() / 70);
+}
+
+void Environment::setPositionX(float posX)
+{
+	positionX = posX;
+}
+
+void Environment::setPositionY(float posY)
+{
+	positionY = posY;
+}
+
+float Environment::getPositionX()
+{
+	return positionX;
+}
+
+float Environment::getPositionY()
+{
+	return positionY;
+}
+
+float Environment::getAIStartX()
+{
+	return positionX + map.getAIStartPosX();
+}
+
+float Environment::getAIStartY()
+{
+	return positionY + map.getAIStartPosY();
 }

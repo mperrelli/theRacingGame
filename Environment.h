@@ -5,7 +5,6 @@
 #include "Vehicle.h"
 #include "Globals.h"
 #include "AI.h"
-using namespace std;
 
 /***********************/
 /* AI LINKED LIST      */
@@ -20,26 +19,29 @@ struct AINode{
 class Environment
 {
 private:
+	// Track object currently assigned to environment
 	Track map;
 
+	// The position of the environment with respect to the
+	// user viewport
 	float positionX;
 	float positionY;
 
-	float AIPosX;
-	float AIPosY;
-
+	// Final index in the assets list
 	int g_assetsEndIndex;
 
+	// Tile and object rows currently loaded in to the environment
 	int tileRows;
 	int tileCols;
 	int objectRows;
 	int objectCols;
-	int time;
 
+	// Pointers for the AI list
 	ptr AIHead;
 	ptr AITailItem;
 	int AIListSize;
 
+	// Global Timer and intervals
 	int timer;
 	int addAIInterval;
 
@@ -53,19 +55,20 @@ public:
 	Environment();
 	~Environment(void);
 
+	// Mutators
 	void processTrack();
 	void updateEnvironment(float x, float y, float);
 	void setPositionX(float posX);
 	void setPositionY(float posY);
 	void draw();
 	void setTrack(Track t);
+
+	// Accessors
 	int getTime();
 	int getAIAmount();
-
 	float getPositionX();
 	float getPositionY();
 	float getAIStartX();
 	float getAIStartY();
-
 	int getTimeRemaining();
 };

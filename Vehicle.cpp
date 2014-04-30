@@ -208,5 +208,5 @@ void Vehicle::update()
 
 int Vehicle::getSpeed()
 {
-	return currSpeed * 8.5;
+	return (int)(currSpeed * 8.5);
 }

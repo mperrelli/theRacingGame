@@ -4,6 +4,7 @@
 /*****************************/
 const int ASSETS_START_INDEX = 50;
 const int ASSET_OFFSET       = 10;
+const int MAX_ASSETS         = 17;
 const int BG               = ASSETS_START_INDEX;
 const int TRACK_H          = ASSETS_START_INDEX + 1;
 const int TRACK_V          = ASSETS_START_INDEX + 2;
@@ -38,20 +39,57 @@ const int SCREEN_CENTER_X = SCREEN_WIDTH / 2;
 const int SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;
 
 /*****************************/
-/* TILE SIZES                */
+/* TILE AND TRACK SIZES      */
 /*****************************/
 const int TRACK_TILE_SIZE = 128;
 const int OBJECT_TILE_SIZE = 32;
+const int OBJECTS_PER_TILEROW = TRACK_TILE_SIZE / OBJECT_TILE_SIZE;
+const int TRACK_MAX_SIZE_ROWS = 20;
+const int TRACK_MAX_SIZE_COLS = 20;
+const int OBJECT_MAX_SIZE_COLS = 80;
+const int OBJECT_MAX_SIZE_ROWS = 80;
 
 /*****************************/
-/* Sprite Groups             */
+/* SPRITE GROUPS             */
 /*****************************/
 const int SPRITE_GROUP_TRACK     = 1;
 const int SPRITE_GROUP_SELECTION = 2;
 
 /*****************************/
-/* Vehicle Data              */
+/* SPRITE DEPTHS             */
+/*****************************/
+const int SPRITE_AI_DEPTH = -1;
+
+/*****************************/
+/* VEHICLE DATA              */
 /*****************************/
 const int VEHICLE_FRAME_HEIGHT = 29;
 const int VEHICLE_FRAME_WIDTH  = 70;
 const int VEHICLE_FRAMES       = 8;
+
+/*****************************/
+/* INTERVALS                 */
+/*****************************/
+const int ADD_AI_INTERVAL = 200;
+
+/*****************************/
+/* RANGES                    */
+/*****************************/
+const int AI_SPEED_LOW = 6;
+const int AI_SPEED_HIGH = 9;
+const int AI_CHECK_LOW = 5;
+const int AI_CHECK_HIGH = 10;
+
+/**************************************/
+/* DIRECTION AND CORRESPONDING ANGLES */
+/**************************************/
+const int EAST_ANGLE     = 0;
+const int EASTHIGH_ANGLE = 360;
+const int SOUTH_ANGLE    = 90;
+const int WEST_ANGLE     = 180;
+const int NORTH_ANGLE    = 270;
+
+const int NORTH = 1;
+const int WEST  = 2;
+const int SOUTH = 3;
+const int EAST  = 4;

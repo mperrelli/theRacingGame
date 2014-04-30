@@ -1,16 +1,12 @@
 #pragma once
-#include "template.h"
 #include <string>
+#include "template.h"
+#include "Globals.h"
 using namespace std;
 
 class Track
 {
 private:
-	static const int TRACK_MAX_SIZE_ROWS = 20;
-	static const int TRACK_MAX_SIZE_COLS = 20;
-	static const int OBJECT_MAX_SIZE_COLS = 80;
-	static const int OBJECT_MAX_SIZE_ROWS = 80;
-
 	string name;
 	string description;
 	int trackRows;
@@ -24,8 +20,6 @@ private:
 	int time;
 
 public:
-	static const int MAX_ASSETS = 17;
-
 	int trackAtlas[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS];
 	int objectAtlas[OBJECT_MAX_SIZE_ROWS][OBJECT_MAX_SIZE_COLS];
 	string assets[MAX_ASSETS];
@@ -35,7 +29,7 @@ public:
 			 int AIStartPosX,int AIStartPosY,
 			 int track[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS],
 			 int objects[OBJECT_MAX_SIZE_ROWS][OBJECT_MAX_SIZE_COLS],
-			 string a[MAX_ASSETS]);
+			 string a[MAX_ASSETS], int time);
 	~Track(void);
 
 	string getName();

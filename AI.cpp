@@ -1,14 +1,13 @@
-#include <cstdlib>
 #include "template.h"
 #include "AI.h"
-#include "Log.h"
+#include "Globals.h"
 
 AI::AI() : Sprite()
 {
 	setSpeed();
 	direction = EAST;
 	lastTrackPiece = -1;
-	offset = agk::Random(5, 10);
+	offset = agk::Random(AI_CHECK_LOW, AI_CHECK_HIGH);
 }
 
 AI::AI(int sIndex, string image, float x, float y) : Sprite(sIndex, image)
@@ -16,12 +15,12 @@ AI::AI(int sIndex, string image, float x, float y) : Sprite(sIndex, image)
 	setSpeed();
 	direction = EAST;
 	lastTrackPiece = -1;
-	offset = agk::Random(5, 10);
+	offset = agk::Random(AI_CHECK_LOW, AI_CHECK_HIGH);
 }
 
 void AI::setSpeed()
 {
-	speed = rand() % 9 + 6;
+	speed = agk::Random(AI_SPEED_LOW, AI_SPEED_HIGH);
 }
 
 float AI::getEnvPosY()
@@ -162,16 +161,16 @@ void AI::turnCarTowards(int dir)
 	switch(dir)
 	{
 	case EAST:
-		agk::SetSpriteAngle(getSpriteIndex(), 0);
+		agk::SetSpriteAngle(getSpriteIndex(), (float)EAST_ANGLE);
 		break;
 	case SOUTH:
-		agk::SetSpriteAngle(getSpriteIndex(), 90);
+		agk::SetSpriteAngle(getSpriteIndex(), (float)SOUTH_ANGLE);
 		break;
 	case WEST:
-		agk::SetSpriteAngle(getSpriteIndex(), 180);
+		agk::SetSpriteAngle(getSpriteIndex(), (float)WEST_ANGLE);
 		break;
 	case NORTH:
-		agk::SetSpriteAngle(getSpriteIndex(), 270);
+		agk::SetSpriteAngle(getSpriteIndex(), (float)NORTH_ANGLE);
 		break;
 	}
 }
