@@ -41,10 +41,6 @@ private:
 	ptr AITailItem;
 	int AIListSize;
 
-	// Global Timer and intervals
-	int timer;
-	int addAIInterval;
-
 	void loadTiles();
 	void createSprites();
 	void manageAI();
@@ -64,7 +60,6 @@ public:
 	void setTrack(Track t);
 
 	// Accessors
-	int getTime();
 	int getAIAmount();
 	float getPositionX();
 	float getPositionY();

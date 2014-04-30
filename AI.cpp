@@ -1,6 +1,7 @@
 #include "template.h"
 #include "AI.h"
 #include "Globals.h"
+#include "Timer.h"
 
 AI::AI() : Sprite()
 {
@@ -8,6 +9,7 @@ AI::AI() : Sprite()
 	direction = EAST;
 	lastTrackPiece = -1;
 	offset = agk::Random(AI_CHECK_LOW, AI_CHECK_HIGH);
+	active = true;
 }
 
 AI::AI(int sIndex, string image, float x, float y) : Sprite(sIndex, image)
@@ -16,6 +18,7 @@ AI::AI(int sIndex, string image, float x, float y) : Sprite(sIndex, image)
 	direction = EAST;
 	lastTrackPiece = -1;
 	offset = agk::Random(AI_CHECK_LOW, AI_CHECK_HIGH);
+	active = true;
 }
 
 void AI::setSpeed()
@@ -33,17 +36,22 @@ float AI::getEnvPosX()
 	return posX;
 }
 
-void AI::advancePosition(float x, float y, int timer)
+void AI::advancePosition(float x, float y)
 {
 	// Get surface
 	int sIndex = agk::GetSpriteHitGroup(SPRITE_GROUP_TRACK , getCenterX(), getCenterY());
 
 	int surface = agk::GetSpriteImageID(sIndex);
 
+	if(sIndex == 0)
+	{
+		active = false;	
+	}
+
 	float deltaX = 0, deltaY = 0;
 
 	// Respond to surface
-	if(timer % offset == 0)
+	if(Timer::Instance()->getElapsedTime() % offset == 0)
 	{
 		if(surface == TRACK_H && direction == EAST)
 		{
@@ -173,4 +181,9 @@ void AI::turnCarTowards(int dir)
 		agk::SetSpriteAngle(getSpriteIndex(), (float)NORTH_ANGLE);
 		break;
 	}
+}
+
+bool AI::isActive()
+{
+	return active;
 }

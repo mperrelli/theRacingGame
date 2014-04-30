@@ -71,6 +71,7 @@ const int VEHICLE_FRAMES       = 8;
 /* INTERVALS                 */
 /*****************************/
 const int ADD_AI_INTERVAL = 200;
+const int COLLISION_CHECK_INTERVAL = 10;
 
 /*****************************/
 /* RANGES                    */
@@ -78,7 +79,7 @@ const int ADD_AI_INTERVAL = 200;
 const int AI_SPEED_LOW = 7;
 const int AI_SPEED_HIGH = 12;
 const int AI_CHECK_LOW = 7;
-const int AI_CHECK_HIGH = 12;
+const int AI_CHECK_HIGH = 13;
 
 /**************************************/
 /* DIRECTION AND CORRESPONDING ANGLES */
@@ -93,3 +94,8 @@ const int NORTH = 1;
 const int WEST  = 2;
 const int SOUTH = 3;
 const int EAST  = 4;
+
+/*****************************/
+/* TIME                      */
+/*****************************/
+const int TICKS_PER_SEC = 70;

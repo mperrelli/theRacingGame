@@ -19,6 +19,7 @@
 #include "MapLoader.h"
 #include "Globals.h"
 #include "AI.h"
+#include "Timer.h"
 using namespace AGK;
 using namespace std;
 app App;
@@ -258,6 +259,8 @@ void app::Loop ( void )
 		break;
 
 	case INPLAY:
+
+		Timer::Instance()->tick();
 
 		updateVehicle();
 
@@ -713,7 +716,7 @@ void checkCollisions()
 {
 	int vehicleIndex = userCar.getSpriteIndex();
 
-	if(env.getTime() % 10 == 0)
+	if(Timer::Instance()->getElapsedTime() % COLLISION_CHECK_INTERVAL == 0)
 	{
 		// Check other vehicles
 		for(int i = AI_SPRITE_START_INDEX; i < AI_SPRITE_START_INDEX + env.getAIAmount(); i++)

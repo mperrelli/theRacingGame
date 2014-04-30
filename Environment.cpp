@@ -3,6 +3,7 @@
 #include "Track.h"
 #include "Globals.h"
 #include "AI.h"
+#include "Timer.h"
 using namespace AGK;
 using namespace std;
 
@@ -16,8 +17,6 @@ Environment::Environment()
 	AIHead = NULL;
 	AITailItem = NULL;
 	AIListSize = 0;
-
-	timer = 0;
 }
 
 Environment::~Environment(void)
@@ -61,8 +60,6 @@ void Environment::updateEnvironment(float x, float y, float speed)
 {
 	positionX -= x * speed;
 	positionY -= y * speed;
-
-	timer++;
 
 	manageAI();
 
@@ -200,7 +197,7 @@ void Environment::createSprites()
 void Environment::manageAI()
 {
 	// Check interval and add a new AI if necessary
-	if(timer % ADD_AI_INTERVAL == 0)
+	if(Timer::Instance()->getElapsedTime() % ADD_AI_INTERVAL == 0)
 	{
 		addAI();
 	}
@@ -256,15 +253,13 @@ void Environment::updateAI()
 
 	while(cur != NULL)
 	{
-		cur->sprite->advancePosition(x, y, timer);
+		if(cur->sprite->isActive() == true)
+		{
+			cur->sprite->advancePosition(x, y);
+		}
 
 		cur = cur -> next;
 	}
-}
-
-int Environment::getTime()
-{
-	return timer;
 }
 
 int Environment::getAIAmount()
@@ -274,10 +269,8 @@ int Environment::getAIAmount()
 
 int Environment::getTimeRemaining()
 {
-	// getTime() returns the amount of iterations through the loop.
-	// Dividing this by 70 is an inaccurate method of generating a 
-	// second. But for presentaiton purposes it should work.
-	return map.getTime() - (getTime() / 70);
+	// gets the total map time - the current elapsed inplay time
+	return map.getTime() - Timer::Instance()->getElapsedTimeSec();
 }
 
 void Environment::setPositionX(float posX)
