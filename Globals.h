@@ -75,10 +75,10 @@ const int ADD_AI_INTERVAL = 200;
 /*****************************/
 /* RANGES                    */
 /*****************************/
-const int AI_SPEED_LOW = 6;
-const int AI_SPEED_HIGH = 9;
-const int AI_CHECK_LOW = 5;
-const int AI_CHECK_HIGH = 10;
+const int AI_SPEED_LOW = 7;
+const int AI_SPEED_HIGH = 12;
+const int AI_CHECK_LOW = 7;
+const int AI_CHECK_HIGH = 12;
 
 /**************************************/
 /* DIRECTION AND CORRESPONDING ANGLES */
