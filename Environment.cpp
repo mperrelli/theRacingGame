@@ -18,6 +18,7 @@ Environment::Environment()
 	tileCols = 0;
 	AIPosX = 0;
 	AIPosY = 0;
+	time = 0;
 
 	AIHead = NULL;
 	AITailItem = NULL;
@@ -43,6 +44,8 @@ void Environment::processTrack()
 
 	AIPosX = map.getAIStartPosX();
 	AIPosY = map.getAIStartPosY();
+
+	time = map.getTime();
 }
 
 /*
@@ -308,4 +311,9 @@ int Environment::getTime()
 int Environment::getAIAmount()
 {
 	return AIListSize;
+}
+
+int Environment::getTimeRemaining()
+{
+	return time - (getTime() / 70);
 }

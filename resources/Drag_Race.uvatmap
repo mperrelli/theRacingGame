@@ -10,6 +10,7 @@ startPosX=256
 startPosY=320
 AIStartPosX=0
 AIStartPosY=256
+time=10
 #
 # Asset names
 #

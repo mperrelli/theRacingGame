@@ -64,6 +64,8 @@ const int HEALTH_LABEL = 1;
 const int HEALTH_VALUE = 2;
 const int SPEED_LABEL  = 3;
 const int SPEED_VALUE  = 4;
+const int TIMER_LABEL  = 5;
+const int TIMER_VALUE  = 6;
 
 
 /*************************/
@@ -76,7 +78,8 @@ const int TITLESCREEN  = 0,
 		  PICKCARTYPE  = 4,
 		  LOADING      = 5,
 		  INPLAY       = 6,
-		  GAMEOVER     = 7;
+		  GAMEOVER     = 7,
+		  WIN		   = 8;
 
 int	g_gameState		   = TITLESCREEN;
 int track;
@@ -145,6 +148,8 @@ void app::Begin( void )
 	const int PADDING = 10;
 	const int SIZE = 26;
 
+	agk::CreateText(TIMER_LABEL, "Seconds Left: ");
+	agk::CreateText(TIMER_VALUE, "120");
 	agk::CreateText(HEALTH_LABEL, "Health: ");
 	agk::CreateText(HEALTH_VALUE, "100");
 	agk::CreateText(SPEED_LABEL,  "Speed: ");
@@ -154,11 +159,15 @@ void app::Begin( void )
 	agk::SetTextSize(HEALTH_VALUE, SIZE);
 	agk::SetTextSize(SPEED_LABEL,  SIZE);
 	agk::SetTextSize(SPEED_VALUE,  SIZE);
+	agk::SetTextSize(TIMER_LABEL,  SIZE);
+	agk::SetTextSize(TIMER_VALUE,  SIZE);
 
 	agk::SetTextDepth(HEALTH_LABEL,  -2);
 	agk::SetTextDepth(HEALTH_VALUE,  -2);
 	agk::SetTextDepth(SPEED_LABEL,   -2);
 	agk::SetTextDepth(SPEED_VALUE,   -2);
+	agk::SetTextDepth(TIMER_LABEL,   -2);
+	agk::SetTextDepth(TIMER_VALUE,   -2);
 
 	agk::SetTextPosition(HEALTH_LABEL, SCREEN_WIDTH / 2 -
 		                 agk::GetTextTotalWidth(HEALTH_VALUE) - PADDING,
@@ -180,10 +189,22 @@ void app::Begin( void )
 						 SCREEN_HEIGHT - 
 						 agk::GetTextTotalHeight(SPEED_VALUE));
 
+	agk::SetTextPosition(TIMER_LABEL, SCREEN_WIDTH / 2 - 
+						((agk::GetTextTotalWidth(TIMER_LABEL) + 
+						  agk::GetTextTotalWidth(TIMER_VALUE)) / 2)
+						  , PADDING);
+
+	agk::SetTextPosition(TIMER_VALUE, SCREEN_WIDTH / 2 + 
+						((agk::GetTextTotalWidth(TIMER_LABEL) + 
+						  agk::GetTextTotalWidth(TIMER_VALUE)) / 2)
+						  , PADDING);
+
 	agk::SetTextVisible(HEALTH_LABEL, FALSE);
 	agk::SetTextVisible(HEALTH_VALUE, FALSE);
 	agk::SetTextVisible(SPEED_LABEL, FALSE);
 	agk::SetTextVisible(SPEED_VALUE, FALSE);
+	agk::SetTextVisible(TIMER_LABEL, FALSE);
+	agk::SetTextVisible(TIMER_VALUE, FALSE);
 
 	loadMaps();
 }
@@ -242,6 +263,8 @@ void app::Loop ( void )
 		agk::SetTextVisible(HEALTH_VALUE, TRUE);
 		agk::SetTextVisible(SPEED_LABEL,  TRUE);
 		agk::SetTextVisible(SPEED_VALUE,  TRUE);
+		agk::SetTextVisible(TIMER_LABEL,  TRUE);
+		agk::SetTextVisible(TIMER_VALUE,  TRUE);
 
 		g_gameState = INPLAY;
 
@@ -266,6 +289,11 @@ void app::Loop ( void )
 			g_gameState = GAMEOVER;
 		}
 
+		if(env.getTimeRemaining() <= 0)
+		{
+			g_gameState = WIN;
+		}
+
 		break;
 		
 	case GAMEOVER:
@@ -274,8 +302,15 @@ void app::Loop ( void )
 		agk::DeleteText(HEALTH_VALUE);
 		agk::DeleteText(SPEED_LABEL);
 		agk::DeleteText(SPEED_VALUE);
+		agk::DeleteText(TIMER_LABEL);
+		agk::DeleteText(TIMER_VALUE);
 
 		agk::Print("GAMEOVER");
+		break;
+
+	case WIN:
+
+		agk::Print("WINNER");
 		break;
 	}
 
@@ -723,4 +758,11 @@ void updateHud()
 	string speed(ss.str());
 
 	agk::SetTextString(SPEED_VALUE, speed.c_str());
+
+	ss.str(std::string());
+
+	ss << env.getTimeRemaining();
+	string time(ss.str());
+
+	agk::SetTextString(TIMER_VALUE, time.c_str());
 }

@@ -34,6 +34,7 @@ private:
 	int tileCols;
 	int objectRows;
 	int objectCols;
+	int time;
 
 	ptr AIHead;
 	ptr AITailItem;
@@ -65,4 +66,6 @@ public:
 	float getPositionY();
 	float getAIStartX();
 	float getAIStartY();
+
+	int getTimeRemaining();
 };

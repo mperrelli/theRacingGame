@@ -115,6 +115,16 @@ void Track::setStartPosY(int posY)
 	startPosY = posY;
 }
 
+void Track::setTime(int t)
+{
+	time = t;
+}
+
+int Track::getTime()
+{
+	return time;
+}
+
 int Track::getStartPosX()
 {
 	return startPosX;

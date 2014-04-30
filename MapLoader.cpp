@@ -17,6 +17,7 @@ MapLoader::MapLoader()
 	cols = 0;
 	startPosX = 0;
 	startPosY = 0;
+	time = 0;
 }
 
 // Takes a map file and processes it
@@ -55,6 +56,7 @@ void MapLoader::loadFile(string file)
 				startPosY = atoi(lines[i+6].substr(10).c_str());
 				AIStartPosX = atoi(lines[i+7].substr(12).c_str());
 				AIStartPosY = atoi(lines[i+8].substr(12).c_str());
+				time = atoi(lines[i+9].substr(5).c_str());
 			}
 
 			if(lines[i] == "-assets")
@@ -146,6 +148,7 @@ void MapLoader::storeData()
 	map.setAssets(assets);
 	map.setTrack(track);
 	map.setObjects(objects);
+	map.setTime(time);
 }
 
 // Returns the track object

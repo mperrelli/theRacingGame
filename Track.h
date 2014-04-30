@@ -21,6 +21,7 @@ private:
 	int startPosY;
 	int AIStartPosX;
 	int AIStartPosY;
+	int time;
 
 public:
 	static const int MAX_ASSETS = 17;
@@ -45,6 +46,7 @@ public:
 	int getStartPosY();
 	int getAIStartPosX();
 	int getAIStartPosY();
+	int getTime();
 	string getPathToAsset(int assetIndex);
 
 	void setName(string name);
@@ -58,4 +60,5 @@ public:
 	void setTrack(int track[TRACK_MAX_SIZE_ROWS][TRACK_MAX_SIZE_COLS]);
 	void setObjects(int objects[OBJECT_MAX_SIZE_ROWS][OBJECT_MAX_SIZE_COLS]);
 	void setAssets(string assets[MAX_ASSETS]);
+	void setTime(int time);
 };

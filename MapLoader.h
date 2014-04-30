@@ -22,6 +22,7 @@ private:
 	int startPosY;
 	int AIStartPosX;
 	int AIStartPosY;
+	int time;
 
 	int applyAssetOffset(int);
 
