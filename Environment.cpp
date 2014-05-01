@@ -79,6 +79,8 @@ void Environment::processTrack()
 
 	positionX = float(SCREEN_CENTER_X - map.getStartPosX());
 	positionY = float(SCREEN_CENTER_Y - map.getStartPosY());
+
+	
 }
 
 /*

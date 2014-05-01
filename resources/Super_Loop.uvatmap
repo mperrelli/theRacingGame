@@ -8,8 +8,8 @@ rows=20
 cols=20
 startPosX=512
 startPosY=320
-AIStartPosX=384
-AIStartPosY=300
+AIStartPosX=200
+AIStartPosY=256
 time=120
 #
 # Asset names

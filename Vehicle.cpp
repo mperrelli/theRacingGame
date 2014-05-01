@@ -1,7 +1,6 @@
 #include "template.h"
 #include <string>
 #include "Vehicle.h"
-#include "Log.h"
 #include <iostream>
 using namespace std;
 using namespace AGK;

@@ -162,7 +162,7 @@ void Track::setObjects(int objects[OBJECT_MAX_SIZE_ROWS][OBJECT_MAX_SIZE_COLS])
 {
 	for(int i = 0; i < objectRows; i++)
 	{
-		for(int j = 0; j < objectRows; j++)
+		for(int j = 0; j < objectCols; j++)
 		{
 			objectAtlas[i][j] = objects[i][j];
 		}
