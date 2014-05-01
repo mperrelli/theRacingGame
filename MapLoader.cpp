@@ -4,6 +4,7 @@
 #include "MapLoader.h"
 #include "Track.h"
 #include "Globals.h"
+#include "Log.h"
 using namespace AGK;
 using namespace std;
 
