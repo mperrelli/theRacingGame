@@ -1,9 +1,12 @@
 #include "template.h"
+#include <string>
+#include <sstream>
 #include "Environment.h"
 #include "Track.h"
+#include "log.h"
+#include "Vehicle.h"
 #include "Globals.h"
 #include "AI.h"
-#include "Timer.h"
 using namespace AGK;
 using namespace std;
 
@@ -13,25 +16,80 @@ Environment::Environment()
 	positionY = 0;
 	tileRows = 0;
 	tileCols = 0;
+	AIPosX = 0;
+	AIPosY = 0;
 
 	AIHead = NULL;
 	AITailItem = NULL;
 	AIListSize = 0;
+
+	timer = 0;
+	addAIInterval = 200;
 }
 
 Environment::~Environment(void)
 {
+	int spriteIndex = TRACK_ATLAS_START_INDEX;
+
+	// Sequentially delete all track pieces
+	for (int r = 0; r < tileRows; r++)
+	{
+		for (int c = 0; c < tileCols; c++)
+		{
+			agk::DeleteSprite(spriteIndex);
+
+			// Increment sprite Index
+			spriteIndex++;
+		}
+	}
+
+	// Sequentially delete all objects
+	for (int r = 0; r < objectRows; r++)
+	{
+		for (int c = 0; c < objectCols; c++)
+		{
+			if(map.objectAtlas[r][c] > (ASSETS_START_INDEX - ASSET_OFFSET))
+			{
+				agk::DeleteSprite(spriteIndex);
+
+				// Increment sprite Index
+				spriteIndex++;
+			}
+		}
+	}
+
+	// Sequentially delete all assets
+	for (int r = 0; r < objectRows; r++)
+	{
+		for (int c = 0; c < objectCols; c++)
+		{
+			if(map.objectAtlas[r][c] > (ASSETS_START_INDEX - ASSET_OFFSET))
+			{
+				agk::DeleteSprite(spriteIndex);
+
+				// Increment sprite Index
+				spriteIndex++;
+			}
+		}
+	}
+
+	// Delete all AI cars
+	for(int i = AI_SPRITE_START_INDEX; i < AIListSize + AI_SPRITE_START_INDEX; i++)
+		agk::DeleteSprite(i);
 }
 
 void Environment::processTrack()
 {
 	tileRows = map.getRows();
 	tileCols = map.getCols();
-	objectRows = tileRows * OBJECTS_PER_TILEROW;
-	objectCols = tileCols * OBJECTS_PER_TILEROW;
+	objectRows = tileRows * 4;
+	objectCols = tileCols * 4;
 
-	positionX = float(SCREEN_CENTER_X - map.getStartPosX());
-	positionY = float(SCREEN_CENTER_Y - map.getStartPosY());
+	positionX = SCREEN_CENTER_X - map.getStartPosX();
+	positionY = SCREEN_CENTER_Y - map.getStartPosY();
+
+	AIPosX = map.getAIStartPosX();
+	AIPosY = map.getAIStartPosY();
 }
 
 /*
@@ -61,9 +119,41 @@ void Environment::updateEnvironment(float x, float y, float speed)
 	positionX -= x * speed;
 	positionY -= y * speed;
 
+	timer++;
+
 	manageAI();
 
 	draw();
+}
+
+void Environment::setPositionX(float posX)
+{
+	positionX = posX;
+}
+
+void Environment::setPositionY(float posY)
+{
+	positionY = posY;
+}
+
+float Environment::getPositionX()
+{
+	return positionX;
+}
+
+float Environment::getPositionY()
+{
+	return positionY;
+}
+
+float Environment::getAIStartX()
+{
+	return positionX + AIPosX;
+}
+
+float Environment::getAIStartY()
+{
+	return positionY + AIPosY;
 }
 
 /*
@@ -141,7 +231,7 @@ void Environment::loadTiles()
 {  
 	string temp;
 
-	for(int i = 0; i < MAX_ASSETS; i++)
+	for(int i = 0; i < map.MAX_ASSETS; i++)
 	{
 		temp = map.getPathToAsset(i);
 		agk::LoadImage(ASSETS_START_INDEX + i, temp.c_str());
@@ -197,7 +287,7 @@ void Environment::createSprites()
 void Environment::manageAI()
 {
 	// Check interval and add a new AI if necessary
-	if(Timer::Instance()->getElapsedTime() % ADD_AI_INTERVAL == 0)
+	if(timer % addAIInterval == 0)
 	{
 		addAI();
 	}
@@ -215,10 +305,11 @@ void Environment::addAI()
 	// A new sprite is dynamically created
 	AI *a = new AI;
 	a -> createSprite(AI_SPRITE_START_INDEX + AIListSize, "Resources/carMoving.png");
+	agk::Print(AI_SPRITE_START_INDEX);
 	a -> setPosition(posX, posY);
 
 	// AGK functions
-	agk::SetSpriteDepth(AI_SPRITE_START_INDEX + AIListSize, SPRITE_AI_DEPTH);
+	agk::SetSpriteDepth(AI_SPRITE_START_INDEX + AIListSize, -1);
 	agk::SetSpriteAnimation(AI_SPRITE_START_INDEX + AIListSize, VEHICLE_FRAME_WIDTH, 
 		                    VEHICLE_FRAME_HEIGHT, VEHICLE_FRAMES);
 	agk::PlaySprite(AI_SPRITE_START_INDEX + AIListSize);
@@ -243,8 +334,6 @@ void Environment::addAI()
 	AITailItem = newptr;
 }
 
-// Update AI positions based on environment position
-// and their speed.
 void Environment::updateAI()
 {
 	ptr cur = AIHead;
@@ -253,52 +342,18 @@ void Environment::updateAI()
 
 	while(cur != NULL)
 	{
-		if(cur->sprite->isActive() == true)
-		{
-			cur->sprite->advancePosition(x, y);
-		}
+		cur->sprite->advancePosition(x, y, timer);
 
 		cur = cur -> next;
 	}
 }
 
+int Environment::getTime()
+{
+	return timer;
+}
+
 int Environment::getAIAmount()
 {
 	return AIListSize;
-}
-
-int Environment::getTimeRemaining()
-{
-	// gets the total map time - the current elapsed inplay time
-	return map.getTime() - Timer::Instance()->getElapsedTimeSec();
-}
-
-void Environment::setPositionX(float posX)
-{
-	positionX = posX;
-}
-
-void Environment::setPositionY(float posY)
-{
-	positionY = posY;
-}
-
-float Environment::getPositionX()
-{
-	return positionX;
-}
-
-float Environment::getPositionY()
-{
-	return positionY;
-}
-
-float Environment::getAIStartX()
-{
-	return positionX + map.getAIStartPosX();
-}
-
-float Environment::getAIStartY()
-{
-	return positionY + map.getAIStartPosY();
 }
