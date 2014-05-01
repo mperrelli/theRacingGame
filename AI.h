@@ -8,7 +8,7 @@ public:
 	int lastTrackPiece;
 	int speed;
 	int offset;
-	int active;
+	bool active;
 	float posX, posY;
 	void setSpeed();
 	void advancePosition(float x, float y);

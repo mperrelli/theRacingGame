@@ -31,6 +31,8 @@ void generateTitleScreen();
 void generateInstructions();
 void generateCarScreen();
 void generateTrackScreen();
+void generateGameOverScreen();
+void generateWinnerScreen();
 void chooseCarColor();
 void loadMaps();
 void chooseCarType();
@@ -57,9 +59,12 @@ const int CONTROL_INDEX					= 10;
 const int CHOOSE_TRACK_SCREEN_INDEX     = 11;
 const int LINEAR_INDEX				    = 12;
 const int LOOP_INDEX					= 13;
+const int WINNER_SCREEN_INDEX			= 14; 
+const int GAME_OVER_SCREEN_INDEX		= 15;
 
 // Sound and Music indexes
 const int TITLE_SCREEN_MUSIC = 1;
+const int GAME_OVER_MUSIC	 = 2;
 
 // Text Indexes
 const int HEALTH_LABEL = 1;
@@ -114,7 +119,9 @@ Sprite titleScreen(TITLE_SCREEN_BG_INDEX,			"resources/title_screen_bg.jpg"),
 	   balance(BALANCE_INDEX,						"resources/balance.png"),
 	   trackScreen(CHOOSE_TRACK_SCREEN_INDEX,		"resources/choose_track_screen.jpg"),
 	   linearTrack(LINEAR_INDEX,					"resources/linear_track.png"),
-	   loopTrack(LOOP_INDEX,						"resources/loop_track.png");
+	   loopTrack(LOOP_INDEX,						"resources/loop_track.png"),
+	   winnerScreen(WINNER_SCREEN_INDEX,			"resources/winner_screen.jpg"),
+	   gameOverScreen(GAME_OVER_SCREEN_INDEX,		"resources/game_over_screen.jpg");
 
 // Begin app, called once at the start
 void app::Begin( void )
@@ -125,6 +132,7 @@ void app::Begin( void )
 
 	// Load Sounds and Music
 	agk::LoadMusic(TITLE_SCREEN_MUSIC,		"resources/title_screen_music.mp3");
+	agk::LoadSound(GAME_OVER_MUSIC,			"resources/gameovermusic.wav"); 
 
 	// Load Images
 	agk::LoadImage(CAR,					    "resources/car.png");
@@ -288,13 +296,32 @@ void app::Loop ( void )
 		agk::DeleteText(SPEED_VALUE);
 		agk::DeleteText(TIMER_LABEL);
 		agk::DeleteText(TIMER_VALUE);
+		userCar.setVisible(FALSE);
+		env.~Environment();
 
-		agk::Print("GAMEOVER");
+		if(!agk::GetSoundsPlaying(GAME_OVER_MUSIC))
+		{
+			agk::PlaySound(GAME_OVER_MUSIC);
+		}
+		generateGameOverScreen();
 		break;
 
 	case WIN:
 
-		agk::Print("WINNER");
+		agk::DeleteText(HEALTH_LABEL);
+		agk::DeleteText(HEALTH_VALUE);
+		agk::DeleteText(SPEED_LABEL);
+		agk::DeleteText(SPEED_VALUE);
+		agk::DeleteText(TIMER_LABEL);
+		agk::DeleteText(TIMER_VALUE);
+		userCar.setVisible(FALSE);
+		env.~Environment();
+	
+		if(!agk::GetSoundsPlaying(GAME_OVER_MUSIC))
+		{
+			agk::PlaySound(GAME_OVER_MUSIC);
+		}
+		generateWinnerScreen();
 		break;
 	}
 
@@ -321,6 +348,16 @@ void generateTitleScreen()
 		// Advance gamestate
 		g_gameState = INSTRUCTIONS;
 	}
+}
+
+void generateGameOverScreen()
+{
+	gameOverScreen.setVisible(TRUE);
+}
+
+void generateWinnerScreen()
+{
+	winnerScreen.setVisible(TRUE);
 }
 
 void generateTrackScreen()
@@ -414,7 +451,7 @@ void chooseCarType()
 		float mouseX = agk::GetRawMouseX();
 		float mouseY = agk::GetRawMouseY();
 
-		switch(agk::GetSpriteHit(mouseX, mouseY))
+		switch(agk::GetSpriteHitGroup(SPRITE_GROUP_SELECTION, mouseX, mouseY))
 		{
 			case SPEED_INDEX:
 
@@ -437,6 +474,8 @@ void chooseCarType()
 			default:
 				break;
 		}
+
+
 
 		// Destroy sprites not in use
 		carTypeScreen.~Sprite();
@@ -537,6 +576,10 @@ void createSpritesForMenus()
 	control.createSprite();
 	balance.createSprite();
 
+	speed.setSpriteGroup(SPRITE_GROUP_SELECTION);
+	control.setSpriteGroup(SPRITE_GROUP_SELECTION);
+	balance.setSpriteGroup(SPRITE_GROUP_SELECTION);
+
 	// Set positions
 	speed.setPosition(20, SCREEN_HEIGHT / 2 - speed.getCenterY());
 
@@ -551,6 +594,13 @@ void createSpritesForMenus()
 	speed.setVisible(FALSE);
 	control.setVisible(FALSE);
 	balance.setVisible(FALSE);
+
+	// Game Over/Winner Screen 
+ 	gameOverScreen.createSprite(); 
+	winnerScreen.createSprite();
+
+ 	gameOverScreen.setVisible(FALSE);
+	winnerScreen.setVisible(FALSE);
 }
 
 // Update Vehicle angle, speed based on input

@@ -21,6 +21,53 @@ Environment::Environment()
 
 Environment::~Environment(void)
 {
+	int spriteIndex = TRACK_ATLAS_START_INDEX;
+
+	// Sequentially delete all track pieces
+	for (int r = 0; r < tileRows; r++)
+	{
+		for (int c = 0; c < tileCols; c++)
+		{
+			agk::DeleteSprite(spriteIndex);
+
+			// Increment sprite Index
+			spriteIndex++;
+		}
+	}
+
+	// Sequentially delete all objects
+	for (int r = 0; r < objectRows; r++)
+	{
+		for (int c = 0; c < objectCols; c++)
+		{
+			if(map.objectAtlas[r][c] > (ASSETS_START_INDEX - ASSET_OFFSET))
+			{
+				agk::DeleteSprite(spriteIndex);
+
+				// Increment sprite Index
+				spriteIndex++;
+			}
+		}
+	}
+
+	// Sequentially delete all assets
+	for (int r = 0; r < objectRows; r++)
+	{
+		for (int c = 0; c < objectCols; c++)
+		{
+			if(map.objectAtlas[r][c] > (ASSETS_START_INDEX - ASSET_OFFSET))
+			{
+				agk::DeleteSprite(spriteIndex);
+
+				// Increment sprite Index
+				spriteIndex++;
+			}
+		}
+	}
+
+	// Delete all AI cars
+	for(int i = AI_SPRITE_START_INDEX; i < AIListSize + AI_SPRITE_START_INDEX; i++)
+		agk::DeleteSprite(i);
 }
 
 void Environment::processTrack()
