@@ -20,6 +20,7 @@
 #include "Globals.h"
 #include "AI.h"
 #include "Timer.h"
+#include "View.h"
 using namespace AGK;
 using namespace std;
 app App;
@@ -27,53 +28,15 @@ app App;
 /***********************/
 /* FUNCTION PROTOTYPES */
 /***********************/
-void generateTitleScreen();
-void generateInstructions();
-void generateCarScreen();
-void generateTrackScreen();
-void generateGameOverScreen();
-void generateWinnerScreen();
+void titleScreen();
+void instructionScreen();
+void trackScreen();
 void chooseCarColor();
-void loadMaps();
 void chooseCarType();
-void createSpritesForMenus();
+void loadMaps();
 void updateVehicle();
 void checkCollisions();
 void updateHud();
-
-/***************************/
-/* IMAGE/SPRITE INDICES    */
-/***************************/
-
-// Sprite indexes
-const int TITLE_SCREEN_BG_INDEX			= 1;
-const int CAR_INDEX						= 2;
-const int CHOOSE_CAR_COLOR_SCREEN_INDEX = 3;
-const int RED_INDEX						= 4;
-const int GREEN_INDEX					= 5;
-const int BLUE_INDEX					= 6;
-const int CHOOSE_CAR_TYPE_SCREEN_INDEX  = 7;
-const int SPEED_INDEX					= 8;
-const int BALANCE_INDEX					= 9;
-const int CONTROL_INDEX					= 10;
-const int CHOOSE_TRACK_SCREEN_INDEX     = 11;
-const int LINEAR_INDEX				    = 12;
-const int LOOP_INDEX					= 13;
-const int WINNER_SCREEN_INDEX			= 14; 
-const int GAME_OVER_SCREEN_INDEX		= 15;
-
-// Sound and Music indexes
-const int TITLE_SCREEN_MUSIC = 1;
-const int GAME_OVER_MUSIC	 = 2;
-
-// Text Indexes
-const int HEALTH_LABEL = 1;
-const int HEALTH_VALUE = 2;
-const int SPEED_LABEL  = 3;
-const int SPEED_VALUE  = 4;
-const int TIMER_LABEL  = 5;
-const int TIMER_VALUE  = 6;
-
 
 /*************************/
 /* GAMESTATES ATTRIBUTES */
@@ -108,21 +71,6 @@ Environment env;
 /****************************/
 Vehicle userCar;
 
-Sprite titleScreen(TITLE_SCREEN_BG_INDEX,			"resources/title_screen_bg.jpg"),
-	   carScreen(CHOOSE_CAR_COLOR_SCREEN_INDEX,		"resources/choose_car_color_screen.jpg"),
-	   red(RED_INDEX,								"resources/RED.jpg"),
-	   green(GREEN_INDEX,							"resources/GREEN.jpg"),
-	   blue(BLUE_INDEX,								"resources/BLUE.jpg"),
-	   carTypeScreen(CHOOSE_CAR_TYPE_SCREEN_INDEX,	"resources/choose_car_type_screen.jpg"),
-	   speed(SPEED_INDEX,							"resources/speed.png"),
-	   control(CONTROL_INDEX,						"resources/control.png"),
-	   balance(BALANCE_INDEX,						"resources/balance.png"),
-	   trackScreen(CHOOSE_TRACK_SCREEN_INDEX,		"resources/choose_track_screen.jpg"),
-	   linearTrack(LINEAR_INDEX,					"resources/linear_track.png"),
-	   loopTrack(LOOP_INDEX,						"resources/loop_track.png"),
-	   winnerScreen(WINNER_SCREEN_INDEX,			"resources/winner_screen.jpg"),
-	   gameOverScreen(GAME_OVER_SCREEN_INDEX,		"resources/game_over_screen.jpg");
-
 // Begin app, called once at the start
 void app::Begin( void )
 {
@@ -131,15 +79,11 @@ void app::Begin( void )
 	agk::SetVirtualResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Load Sounds and Music
-	agk::LoadMusic(TITLE_SCREEN_MUSIC,		"resources/title_screen_music.mp3");
 	agk::LoadSound(GAME_OVER_MUSIC,			"resources/gameovermusic.wav"); 
 
 	// Load Images
 	agk::LoadImage(CAR,					    "resources/car.png");
 	agk::LoadImage(CAR_MOVING,              "resources/carMoving.png");
-
-	// Play Title Screen Music
-	agk::PlayMusic(TITLE_SCREEN_MUSIC, TRUE);
 
 	// Create userCar sprite and set all its attributes
 	userCar.createSprite(CAR_INDEX, CAR);
@@ -154,67 +98,8 @@ void app::Begin( void )
 	// Set sprite initial visibilities
 	userCar.setVisible(FALSE);
 
-	// Set hud items
-	const int PADDING = 10;
-	const int SIZE = 26;
-
-	agk::CreateText(TIMER_LABEL, "Seconds Left: ");
-	agk::CreateText(TIMER_VALUE, "120");
-	agk::CreateText(HEALTH_LABEL, "Health: ");
-	agk::CreateText(HEALTH_VALUE, "100");
-	agk::CreateText(SPEED_LABEL,  "Speed: ");
-	agk::CreateText(SPEED_VALUE,  "000");
-
-	agk::SetTextSize(HEALTH_LABEL, (float)SIZE);
-	agk::SetTextSize(HEALTH_VALUE, (float)SIZE);
-	agk::SetTextSize(SPEED_LABEL,  (float)SIZE);
-	agk::SetTextSize(SPEED_VALUE,  (float)SIZE);
-	agk::SetTextSize(TIMER_LABEL,  (float)SIZE);
-	agk::SetTextSize(TIMER_VALUE,  (float)SIZE);
-
-	agk::SetTextDepth(HEALTH_LABEL,  -2);
-	agk::SetTextDepth(HEALTH_VALUE,  -2);
-	agk::SetTextDepth(SPEED_LABEL,   -2);
-	agk::SetTextDepth(SPEED_VALUE,   -2);
-	agk::SetTextDepth(TIMER_LABEL,   -2);
-	agk::SetTextDepth(TIMER_VALUE,   -2);
-
-	agk::SetTextPosition(HEALTH_LABEL, SCREEN_WIDTH / 2 -
-		                 agk::GetTextTotalWidth(HEALTH_VALUE) - PADDING,
-						 SCREEN_HEIGHT - 
-						 agk::GetTextTotalHeight(HEALTH_LABEL));
-	agk::SetTextAlignment(HEALTH_LABEL, 2);
-
-	agk::SetTextPosition(HEALTH_VALUE, SCREEN_WIDTH / 2 - PADDING,
-						 SCREEN_HEIGHT - 
-						 agk::GetTextTotalHeight(HEALTH_LABEL));
-	agk::SetTextAlignment(HEALTH_VALUE, 2);
-
-	agk::SetTextPosition(SPEED_LABEL, SCREEN_WIDTH / 2 + PADDING, 
-						 SCREEN_HEIGHT - 
-						 agk::GetTextTotalHeight(SPEED_LABEL));
-
-	agk::SetTextPosition(SPEED_VALUE, SCREEN_WIDTH / 2 + 
-		                 agk::GetTextTotalWidth(SPEED_LABEL) + PADDING,
-						 SCREEN_HEIGHT - 
-						 agk::GetTextTotalHeight(SPEED_VALUE));
-
-	agk::SetTextPosition(TIMER_LABEL, SCREEN_WIDTH / 2 - 
-						((agk::GetTextTotalWidth(TIMER_LABEL) + 
-						  agk::GetTextTotalWidth(TIMER_VALUE)) / 2)
-						  , (float)PADDING);
-
-	agk::SetTextPosition(TIMER_VALUE, SCREEN_WIDTH / 2 + 
-						((agk::GetTextTotalWidth(TIMER_LABEL) + 
-						  agk::GetTextTotalWidth(TIMER_VALUE)) / 2)
-						  , (float)PADDING);
-
-	agk::SetTextVisible(HEALTH_LABEL, FALSE);
-	agk::SetTextVisible(HEALTH_VALUE, FALSE);
-	agk::SetTextVisible(SPEED_LABEL, FALSE);
-	agk::SetTextVisible(SPEED_VALUE, FALSE);
-	agk::SetTextVisible(TIMER_LABEL, FALSE);
-	agk::SetTextVisible(TIMER_VALUE, FALSE);
+	View::Instance()->buildTitleScreen();
+	View::Instance()->showTitleScreen();
 
 	loadMaps();
 }
@@ -226,17 +111,17 @@ void app::Loop ( void )
 	{
 	case TITLESCREEN:
 
-		generateTitleScreen();
+		titleScreen();
 		break;
 
 	case INSTRUCTIONS:
 
-		generateInstructions();
+		instructionScreen();
 		break;
 
 	case PICKMAP:
 
-		generateTrackScreen();
+		trackScreen();
 		break;
 
 	case PICKCARCOLOR:
@@ -255,12 +140,10 @@ void app::Loop ( void )
 		env.setTrack(tracks[g_selectedTrack]);
 		userCar.setVisible(TRUE);
 
-		agk::SetTextVisible(HEALTH_LABEL, TRUE);
-		agk::SetTextVisible(HEALTH_VALUE, TRUE);
-		agk::SetTextVisible(SPEED_LABEL,  TRUE);
-		agk::SetTextVisible(SPEED_VALUE,  TRUE);
-		agk::SetTextVisible(TIMER_LABEL,  TRUE);
-		agk::SetTextVisible(TIMER_VALUE,  TRUE);
+		View::Instance()->buildGameoverScreen();
+		View::Instance()->buildWinScreen();
+		View::Instance()->buildHUDScreen();
+		View::Instance()->showHUDScreen();
 
 		g_gameState = INPLAY;
 
@@ -279,10 +162,12 @@ void app::Loop ( void )
 		if(userCar.getHealth() <= 0)
 		{
 			g_gameState = GAMEOVER;
+			View::Instance()->destroyHUDScreen();
 		}
 
 		if(env.getTimeRemaining() <= 0)
 		{
+			View::Instance()->destroyHUDScreen();
 			g_gameState = WIN;
 		}
 
@@ -290,12 +175,6 @@ void app::Loop ( void )
 		
 	case GAMEOVER:
 
-		agk::DeleteText(HEALTH_LABEL);
-		agk::DeleteText(HEALTH_VALUE);
-		agk::DeleteText(SPEED_LABEL);
-		agk::DeleteText(SPEED_VALUE);
-		agk::DeleteText(TIMER_LABEL);
-		agk::DeleteText(TIMER_VALUE);
 		userCar.setVisible(FALSE);
 		env.~Environment();
 
@@ -303,17 +182,12 @@ void app::Loop ( void )
 		{
 			agk::PlaySound(GAME_OVER_MUSIC);
 		}
-		generateGameOverScreen();
+
+		View::Instance()->showGameoverScreen();
 		break;
 
 	case WIN:
 
-		agk::DeleteText(HEALTH_LABEL);
-		agk::DeleteText(HEALTH_VALUE);
-		agk::DeleteText(SPEED_LABEL);
-		agk::DeleteText(SPEED_VALUE);
-		agk::DeleteText(TIMER_LABEL);
-		agk::DeleteText(TIMER_VALUE);
 		userCar.setVisible(FALSE);
 		env.~Environment();
 	
@@ -321,7 +195,8 @@ void app::Loop ( void )
 		{
 			agk::PlaySound(GAME_OVER_MUSIC);
 		}
-		generateWinnerScreen();
+
+		View::Instance()->showWinScreen();
 		break;
 	}
 
@@ -334,45 +209,46 @@ void app::End ( void )
 {
 }
 
-void generateTitleScreen()
+void titleScreen()
 {
-	titleScreen.createSprite();
-
 	// When enter pressed, show instruction screen
 	if(agk::GetRawKeyPressed(AGK_KEY_ENTER))
 	{
-		titleScreen.~Sprite();
-
-		createSpritesForMenus();
+		View::Instance()->destroyTitleScreen();
+		View::Instance()->buildInstructionScreen();
 
 		// Advance gamestate
 		g_gameState = INSTRUCTIONS;
 	}
 }
 
-void generateGameOverScreen()
+void instructionScreen()
 {
-	gameOverScreen.setVisible(TRUE);
+	View::Instance()->showInstructionScreen();
+
+	// When enter pressed, have user pick type of map
+	if(agk::GetRawKeyPressed(AGK_KEY_ENTER))
+	{
+		View::Instance()->destroyInstructionScreen();
+		View::Instance()->buildTrackScreen();
+		View::Instance()->showTrackScreen();
+		g_gameState = PICKMAP;
+	}
 }
 
-void generateWinnerScreen()
+void trackScreen()
 {
-	winnerScreen.setVisible(TRUE);
-}
-
-void generateTrackScreen()
-{
-	trackScreen.setVisible(TRUE);
-	linearTrack.setVisible(TRUE);
-	loopTrack.setVisible(TRUE);
+	float mouseX = agk::GetRawMouseX();
+	float mouseY = agk::GetRawMouseY();
 
 	// Check to see what track car user wants
-	if (agk::GetRawMouseLeftPressed())
+	if (agk::GetRawMouseLeftPressed() && 
+		agk::GetSpriteHitGroup(SPRITE_GROUP_SELECTION, mouseX, mouseY))
 	{
 		float mouseX = agk::GetRawMouseX();
 		float mouseY = agk::GetRawMouseY();
 
-		switch(agk::GetSpriteHitGroup(SPRITE_GROUP_TRACK, mouseX, mouseY))
+		switch(agk::GetSpriteHitGroup(SPRITE_GROUP_SELECTION, mouseX, mouseY))
 		{
 			case LINEAR_INDEX:
 
@@ -388,10 +264,9 @@ void generateTrackScreen()
 				break;
 		}
 
-		// Destroy sprites not in use
-		trackScreen.~Sprite();
-		linearTrack.~Sprite();
-		loopTrack.~Sprite();
+		View::Instance()->destroyTrackScreen();
+		View::Instance()->buildCarColorScreen();
+		View::Instance()->showCarColorScreen();
 
 		// Advance gamestate
 		g_gameState = PICKCARCOLOR;
@@ -401,16 +276,13 @@ void generateTrackScreen()
 
 void chooseCarColor()
 {
-	red.setVisible(TRUE);
-	blue.setVisible(TRUE);
-	green.setVisible(TRUE);
-	carScreen.setVisible(TRUE);
+	float mouseX = agk::GetRawMouseX();
+	float mouseY = agk::GetRawMouseY();
 
 	// Check to see what color car user wants
-	if (agk::GetRawMouseLeftPressed())
+	if (agk::GetRawMouseLeftPressed() &&
+		agk::GetSpriteHitGroup(SPRITE_GROUP_SELECTION, mouseX, mouseY))
 	{
-		float mouseX = agk::GetRawMouseX();
-		float mouseY = agk::GetRawMouseY();
 
 		switch(agk::GetSpriteHitGroup(SPRITE_GROUP_SELECTION, mouseX, mouseY))
 		{
@@ -426,12 +298,10 @@ void chooseCarColor()
 			default:
 				break;
 		}
-
-		// Destroy sprites not in use
-		carScreen.~Sprite();
-		red.~Sprite();
-		green.~Sprite();
-		blue.~Sprite();
+		
+		View::Instance()->destroyCarColorScreen();
+		View::Instance()->buildCarTypeScreen();
+		View::Instance()->showCarTypeScreen();
 
 		// Advance gamestate
 		g_gameState = PICKCARTYPE;
@@ -440,17 +310,13 @@ void chooseCarColor()
 
 void chooseCarType()
 {
-	speed.setVisible(TRUE);
-	balance.setVisible(TRUE);
-	control.setVisible(TRUE);
-	carTypeScreen.setVisible(TRUE);
+	float mouseX = agk::GetRawMouseX();
+	float mouseY = agk::GetRawMouseY();
 
 	// Check to see what color car user wants
-	if (agk::GetRawMouseLeftPressed())
+	if (agk::GetRawMouseLeftPressed() &&
+		agk::GetSpriteHitGroup(SPRITE_GROUP_SELECTION, mouseX, mouseY))
 	{
-		float mouseX = agk::GetRawMouseX();
-		float mouseY = agk::GetRawMouseY();
-
 		switch(agk::GetSpriteHitGroup(SPRITE_GROUP_SELECTION, mouseX, mouseY))
 		{
 			case SPEED_INDEX:
@@ -475,28 +341,10 @@ void chooseCarType()
 				break;
 		}
 
-
-
-		// Destroy sprites not in use
-		carTypeScreen.~Sprite();
-		speed.~Sprite();
-		balance.~Sprite();
-		control.~Sprite();
+		View::Instance()->destroyCarTypeScreen();
 
 		// Advance gamestate
 		g_gameState = LOADING;
-	}
-}
-
-void generateInstructions(){
-
-	//agk::SetSpriteVisible(INTRUCTIONS_BG_INDEX, SHOW);
-	agk::Print("Instructions Go Here. Press Enter to Continue");
-
-	// When enter pressed, have user pick type of map
-	if(agk::GetRawKeyPressed(AGK_KEY_ENTER))
-	{
-		g_gameState = PICKMAP;
 	}
 }
 
@@ -520,87 +368,6 @@ void loadMaps()
 	}
 	
 	agk::CloseFile(fIndex);
-}
-
-// We only want to create and position a single time.
-void createSpritesForMenus()
-{
-	// Track selection sprite setup
-	trackScreen.createSprite();
-	linearTrack.createSprite();
-	loopTrack.createSprite();
-
-	// Set Track Sprite Group
-	trackScreen.setSpriteGroup(SPRITE_GROUP_TRACK);
-	linearTrack.setSpriteGroup(SPRITE_GROUP_TRACK);
-	loopTrack.setSpriteGroup(SPRITE_GROUP_TRACK);
-
-	// Set positions
-	linearTrack.setPosition(50, 
-							SCREEN_HEIGHT / 2 - linearTrack.getCenterY());
-	loopTrack.setPosition(SCREEN_WIDTH - loopTrack.getWidth() - 50,
-						  SCREEN_HEIGHT / 2 - loopTrack.getCenterY());
-
-	// Set default visibility
-	trackScreen.setVisible(FALSE);
-	linearTrack.setVisible(FALSE);
-	loopTrack.setVisible(FALSE);
-
-	// Car color selection sprite setup
-	carScreen.createSprite();
-	red.createSprite();
-	green.createSprite();
-	blue.createSprite();
-
-	// Set Color Sprite Group
-	red.setSpriteGroup(SPRITE_GROUP_SELECTION);
-	green.setSpriteGroup(SPRITE_GROUP_SELECTION);
-	blue.setSpriteGroup(SPRITE_GROUP_SELECTION);
-
-	// Set positions
-	red.setX(SCREEN_WIDTH / 2 - red.getCenterX());
-	red.setY(SCREEN_HEIGHT / 4 - red.getCenterY());
-	green.setX(SCREEN_WIDTH / 2 - green.getCenterX());
-	green.setY(SCREEN_HEIGHT / 2 - green.getCenterY());
-	blue.setX(SCREEN_WIDTH / 2 - blue.getCenterX());
-	blue.setY(SCREEN_HEIGHT / 1.3f - blue.getCenterY());
-
-	carScreen.setVisible(FALSE);
-	red.setVisible(FALSE);
-	green.setVisible(FALSE);
-	blue.setVisible(FALSE);
-
-	// Car type selection sprite setup
-	carTypeScreen.createSprite();
-	speed.createSprite();
-	control.createSprite();
-	balance.createSprite();
-
-	speed.setSpriteGroup(SPRITE_GROUP_SELECTION);
-	control.setSpriteGroup(SPRITE_GROUP_SELECTION);
-	balance.setSpriteGroup(SPRITE_GROUP_SELECTION);
-
-	// Set positions
-	speed.setPosition(20, SCREEN_HEIGHT / 2 - speed.getCenterY());
-
-	balance.setPosition(SCREEN_WIDTH / 2 - balance.getCenterX(), 
-						SCREEN_HEIGHT / 2 - balance.getCenterY());
-
-	control.setPosition(SCREEN_WIDTH - control.getWidth() - 20,
-						SCREEN_HEIGHT / 2 - control.getCenterY());
-
-	// Set default visibility
-	carTypeScreen.setVisible(FALSE);
-	speed.setVisible(FALSE);
-	control.setVisible(FALSE);
-	balance.setVisible(FALSE);
-
-	// Game Over/Winner Screen 
- 	gameOverScreen.createSprite(); 
-	winnerScreen.createSprite();
-
- 	gameOverScreen.setVisible(FALSE);
-	winnerScreen.setVisible(FALSE);
 }
 
 // Update Vehicle angle, speed based on input

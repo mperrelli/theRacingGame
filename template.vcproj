@@ -237,6 +237,10 @@
 				RelativePath=".\Vehicle.h"
 				>
 			</File>
+			<File
+				RelativePath=".\View.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\AI.cpp"
@@ -284,6 +288,10 @@
 		</File>
 		<File
 			RelativePath=".\Vehicle.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\View.cpp"
 			>
 		</File>
 	</Files>

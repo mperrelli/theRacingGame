@@ -30,6 +30,39 @@ const int AI_SPRITE_START_INDEX = 1500;
 const int CAR = 2;
 const int CAR_MOVING = 3;
 
+/***************************/
+/* IMAGE/SPRITE INDICES    */
+/***************************/
+
+// Sprite indexes
+const int TITLE_SCREEN_BG_INDEX			= 1;
+const int CAR_INDEX						= 2;
+const int CHOOSE_CAR_COLOR_SCREEN_INDEX = 3;
+const int RED_INDEX						= 4;
+const int GREEN_INDEX					= 5;
+const int BLUE_INDEX					= 6;
+const int CHOOSE_CAR_TYPE_SCREEN_INDEX  = 7;
+const int SPEED_INDEX					= 8;
+const int BALANCE_INDEX					= 9;
+const int CONTROL_INDEX					= 10;
+const int CHOOSE_TRACK_SCREEN_INDEX     = 11;
+const int LINEAR_INDEX				    = 12;
+const int LOOP_INDEX					= 13;
+const int WINNER_SCREEN_INDEX			= 14; 
+const int GAME_OVER_SCREEN_INDEX		= 15;
+
+// Sound and Music indexes
+const int TITLE_SCREEN_MUSIC = 1;
+const int GAME_OVER_MUSIC	 = 2;
+
+// Text Indexes
+const int HEALTH_LABEL = 1;
+const int HEALTH_VALUE = 2;
+const int SPEED_LABEL  = 3;
+const int SPEED_VALUE  = 4;
+const int TIMER_LABEL  = 5;
+const int TIMER_VALUE  = 6;
+
 /*****************************/
 /* SCREEN DATA               */
 /*****************************/
