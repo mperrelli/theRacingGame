@@ -29,7 +29,6 @@ app App;
 /* FUNCTION PROTOTYPES */
 /***********************/
 void titleScreen();
-void instructionScreen();
 void trackScreen();
 void chooseCarColor();
 void chooseCarType();
@@ -42,14 +41,13 @@ void updateHud();
 /* GAMESTATES ATTRIBUTES */
 /*************************/
 const int TITLESCREEN  = 0,
-	      INSTRUCTIONS = 1,
-		  PICKMAP	   = 2,
-		  PICKCARCOLOR = 3,
-		  PICKCARTYPE  = 4,
-		  LOADING      = 5,
-		  INPLAY       = 6,
-		  GAMEOVER     = 7,
-		  WIN		   = 8;
+		  PICKMAP	   = 1,
+		  PICKCARCOLOR = 2,
+		  PICKCARTYPE  = 3,
+		  LOADING      = 4,
+		  INPLAY       = 5,
+		  GAMEOVER     = 6,
+		  WIN		   = 7;
 
 int	g_gameState		   = TITLESCREEN;
 
@@ -112,11 +110,6 @@ void app::Loop ( void )
 	case TITLESCREEN:
 
 		titleScreen();
-		break;
-
-	case INSTRUCTIONS:
-
-		instructionScreen();
 		break;
 
 	case PICKMAP:
@@ -215,23 +208,10 @@ void titleScreen()
 	if(agk::GetRawKeyPressed(AGK_KEY_ENTER))
 	{
 		View::Instance()->destroyTitleScreen();
-		View::Instance()->buildInstructionScreen();
-
-		// Advance gamestate
-		g_gameState = INSTRUCTIONS;
-	}
-}
-
-void instructionScreen()
-{
-	View::Instance()->showInstructionScreen();
-
-	// When enter pressed, have user pick type of map
-	if(agk::GetRawKeyPressed(AGK_KEY_ENTER))
-	{
-		View::Instance()->destroyInstructionScreen();
 		View::Instance()->buildTrackScreen();
 		View::Instance()->showTrackScreen();
+
+		// Advance gamestate
 		g_gameState = PICKMAP;
 	}
 }

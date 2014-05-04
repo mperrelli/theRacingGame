@@ -67,7 +67,9 @@ Environment::~Environment(void)
 
 	// Delete all AI cars
 	for(int i = AI_SPRITE_START_INDEX; i < AIListSize + AI_SPRITE_START_INDEX; i++)
+	{
 		agk::DeleteSprite(i);
+	}
 }
 
 void Environment::processTrack()
@@ -79,8 +81,6 @@ void Environment::processTrack()
 
 	positionX = float(SCREEN_CENTER_X - map.getStartPosX());
 	positionY = float(SCREEN_CENTER_Y - map.getStartPosY());
-
-	
 }
 
 /*
